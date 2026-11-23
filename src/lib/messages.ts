@@ -48,9 +48,9 @@ const zh = {
     title: '团队',
     kicker: 'About the team',
     description:
-      '认识 Gh0xE9（Ghost In The Bytes）：公开可核验的团队介绍，以及 CTFtime 上的参赛记录。',
+      '认识 Gh0xE9（Ghost In The Bytes）：公开可核验的团队介绍。',
     intro:
-      'Gh0xE9，也写作 Ghost In The Bytes。在 CTFtime 上同时还记作 Ghost Happy Team。下面只写有来源的公开事实，不编造成员名单，也不虚构奖项。',
+      'Gh0xE9，也写作 Ghost In The Bytes。下面只写有来源的公开事实，也不虚构奖项。',
     identityKicker: 'Identity',
     identityTitle: '观微知著',
     identityLede:
@@ -59,15 +59,6 @@ const zh = {
       '名称里的 0xE9，在 x86 指令里是一次近跳转（JMP）。这不是一段编造的创立神话，而是这个门户用来辨认自己的图形语言：在字节里看见线索，再决定跳到哪里。',
     identityNote:
       'GitHub 组织创建于 2019 年 2 月 28 日。定位一栏公开写着 C:\\Windows\\lost+found\\etc，我们不强行指定单一总部地址。',
-    ctfKicker: 'CTFtime',
-    ctfTitle: '参赛记录',
-    ctfLead:
-      'CTFtime 上写着这是一支新的 CTF 队伍，欢迎加入（a new CTF team, welcome to join）。目前列出的公开成员如下。',
-    ctfRosterNote: '这不是完整名册，只是该页当时公开显示的名字。',
-    ctfEvent: '赛事',
-    ctfPlace: '名次',
-    ctfPoints: '分数',
-    ctfButton: '在 CTFtime 查看',
   },
   services: {
     title: '业务',
@@ -167,14 +158,14 @@ const zh = {
   contact: {
     title: '联系',
     kicker: 'Get in touch',
-    description: '通过已有官网、GitHub、X、CTFtime 或微信公众号联系 Gh0xE9。',
+    description: '通过已有官网、GitHub、X 或微信公众号联系 Gh0xE9。',
     intro:
       '目前公开可核验的联系方式如下。本站不公布邮箱名册。高校与社区同伴若有意加入，可先通过这些窗口打招呼。',
     officialTitle: '已有官网',
     wechatTitle: '公众号',
     wechatAria: '微信公众号',
     welcome:
-      '欢迎高校与社区成员加入。公开资料里的原话是：Just join us，Gh0xE9 Team Welcomes universities and community members to join.',
+      '有事请通过以上窗口联系。',
   },
   notFound: {
     title: '未找到',
@@ -234,9 +225,9 @@ const en = {
     title: 'The team',
     kicker: 'About the team',
     description:
-      'Gh0xE9 (Ghost In The Bytes): a sourced public introduction, and the CTFtime competition record.',
+      'Gh0xE9 (Ghost In The Bytes): a sourced public introduction.',
     intro:
-      'Gh0xE9, also written Ghost In The Bytes. On CTFtime the side is also recorded as Ghost Happy Team. What follows is sourced public fact: we do not invent a roster, and we do not invent awards.',
+      'Gh0xE9, also written Ghost In The Bytes. What follows is sourced public fact. We do not invent awards.',
     identityKicker: 'Identity',
     identityTitle: '观微知著',
     identityLede:
@@ -245,15 +236,6 @@ const en = {
       'The 0xE9 in the name is a near jump (JMP) in x86. This is not an invented origin myth; it is the graphic language this portal uses to recognize itself: see the clue in the bytes, then decide where to jump.',
     identityNote:
       'The GitHub organization was created on 28 February 2019. The location field is published as C:\\Windows\\lost+found\\etc. We do not assert a single headquarters.',
-    ctfKicker: 'CTFtime',
-    ctfTitle: 'Competition record',
-    ctfLead:
-      'CTFtime describes this as a new CTF team, welcome to join. The members currently listed in public are the following.',
-    ctfRosterNote: 'This is not a complete roster, only the names shown on that page at the time.',
-    ctfEvent: 'Event',
-    ctfPlace: 'Place',
-    ctfPoints: 'Points',
-    ctfButton: 'View on CTFtime',
   },
   services: {
     title: 'Work',
@@ -353,14 +335,14 @@ const en = {
   contact: {
     title: 'Contact',
     kicker: 'Get in touch',
-    description: 'Reach Gh0xE9 through the existing official site, GitHub, X, CTFtime, or the WeChat official account.',
+    description: 'Reach Gh0xE9 through the existing official site, GitHub, X, or the WeChat official account.',
     intro:
       'The publicly verifiable channels are below. This site does not publish an email roster. If you are from a university or a community and want to say hello, start with these windows.',
     officialTitle: 'Existing site',
     wechatTitle: 'Official account',
     wechatAria: 'WeChat official account',
     welcome:
-      'Universities and community members are welcome. The public wording is: Just join us, Gh0xE9 Team Welcomes universities and community members to join.',
+      'If you need to reach us, use the channels above.',
   },
   notFound: {
     title: 'Not found',
@@ -420,9 +402,9 @@ const ko = {
     title: '팀',
     kicker: 'About the team',
     description:
-      'Gh0xE9(Ghost In The Bytes)를 공개된 사실로 소개한다. CTFtime 대회 기록을 포함한다.',
+      'Gh0xE9(Ghost In The Bytes)를 공개된 사실로 소개한다.',
     intro:
-      'Gh0xE9, 대외적으로는 Ghost In The Bytes. CTFtime에는 Ghost Happy Team으로도 기록되어 있다. 아래는 출처가 있는 공개 사실만 적는다. 구성원 명단을 지어내지 않고, 수상 경력도 지어내지 않는다.',
+      'Gh0xE9, 대외적으로는 Ghost In The Bytes. 아래는 출처가 있는 공개 사실만 적는다. 수상 경력도 지어내지 않는다.',
     identityKicker: 'Identity',
     identityTitle: '观微知著',
     identityLede:
@@ -431,15 +413,6 @@ const ko = {
       '이름 안의 0xE9는 x86 명령어에서 근거리 점프(JMP)다. 이것은 지어낸 창립 신화가 아니라, 이 포털이 자신을 알아보게 하는 그래픽 언어다. 바이트 속에서 단서를 보고, 어디로 점프할지를 정한다.',
     identityNote:
       'GitHub 조직은 2019년 2월 28일에 만들어졌다. 위치란에는 C:\\Windows\\lost+found\\etc가 공개되어 있다. 우리는 하나의 본사를 단정하지 않는다.',
-    ctfKicker: 'CTFtime',
-    ctfTitle: '대회 기록',
-    ctfLead:
-      'CTFtime에는 새로운 CTF 팀이며 가입을 환영한다고 적혀 있다(a new CTF team, welcome to join). 현재 공개된 멤버는 다음과 같다.',
-    ctfRosterNote: '이것은 완전한 명단이 아니며, 해당 페이지에 당시 공개된 이름일 뿐이다.',
-    ctfEvent: '대회',
-    ctfPlace: '순위',
-    ctfPoints: '점수',
-    ctfButton: 'CTFtime에서 보기',
   },
   services: {
     title: '업무',
@@ -539,14 +512,14 @@ const ko = {
   contact: {
     title: '연락',
     kicker: 'Get in touch',
-    description: '기존 공식 사이트, GitHub, X, CTFtime, 위챗 공식 계정으로 Gh0xE9에 연락할 수 있다.',
+    description: '기존 공식 사이트, GitHub, X, 위챗 공식 계정으로 Gh0xE9에 연락할 수 있다.',
     intro:
       '현재 공개적으로 확인할 수 있는 연락 방법은 아래와 같다. 이 사이트는 이메일 명단을 공개하지 않는다. 대학이나 커뮤니티에서 합류하고 싶다면, 먼저 이 창구로 인사를 건네면 된다.',
     officialTitle: '기존 사이트',
     wechatTitle: '공식 계정',
     wechatAria: '위챗 공식 계정',
     welcome:
-      '대학과 커뮤니티 구성원의 합류를 환영한다. 공개된 원문은 이렇다: Just join us, Gh0xE9 Team Welcomes universities and community members to join.',
+      '연락이 필요하면 위의 창구를 이용하면 된다.',
   },
   notFound: {
     title: '찾을 수 없음',

@@ -1,6 +1,5 @@
 ---
 import Base from '../layouts/Base.astro';
-import { ctftime, links } from '../lib/site';
 import type { Locale } from '../lib/i18n';
 import { t } from '../lib/messages';
 import Wordmark from '../components/Wordmark.astro';
@@ -31,48 +30,6 @@ const copy = t(locale);
         <p class="lede">{copy.about.identityLede}</p>
         <p>{copy.about.identityBody}</p>
         <p class="note">{copy.about.identityNote}</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section__head">
-        <div>
-          <p class="kicker">{copy.about.ctfKicker}</p>
-          <h2 class="section__title">{copy.about.ctfTitle}<span>.</span></h2>
-        </div>
-        <p class="section__note">Team 170814 · Academic team Union</p>
-      </div>
-      <p>{copy.about.ctfLead}</p>
-      <ul class="member-list">
-        {ctftime.members.map((name) => <li>{name}</li>)}
-      </ul>
-      <p class="note">{copy.about.ctfRosterNote}</p>
-      <table class="results">
-        <thead>
-          <tr>
-            <th>{copy.about.ctfEvent}</th>
-            <th>{copy.about.ctfPlace}</th>
-            <th>{copy.about.ctfPoints}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            ctftime.events.map((row) => (
-              <tr>
-                <td>{row.name}</td>
-                <td class="num">{row.place}</td>
-                <td class="num">{row.points}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
-      <div class="actions">
-        <a class="btn" href={links.ctftime} rel="noopener">
-          {copy.about.ctfButton} <span class="arrow" aria-hidden="true">↗</span>
-        </a>
       </div>
     </div>
   </section>
