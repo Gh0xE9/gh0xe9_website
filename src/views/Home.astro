@@ -102,7 +102,12 @@ const repoHrefs: Record<string, string> = {
         {
           copy.tools.items.slice(0, 4).map((item, i) => {
             const href = repoHrefs[item.id];
-            const kind = item.kind === 'github' ? copy.tools.githubKind : copy.tools.officialKind;
+            const kind =
+              item.kind === 'github'
+                ? copy.tools.githubKind
+                : item.kind === 'internal'
+                  ? copy.tools.internalKind
+                  : copy.tools.officialKind;
             return (
               <li>
                 <span class="no">{String(i + 1).padStart(2, '0')}</span>
