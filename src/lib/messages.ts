@@ -100,7 +100,7 @@ const zh = {
     title: '工具',
     kicker: 'Tools & projects',
     description:
-      'Gh0xE9 公开介绍过的工具与 GitHub 仓库：EagleSword、NextAssets、NextDetect，以及 erraticgopher、open_artex、hello-writeup。',
+      'Gh0xE9 公开介绍过的工具与 GitHub 仓库：EagleSword、NextAssets、NextDetect，以及 ErraticGopher、open_artex、hello-writeup。',
     intro:
       '前三项摘自已有官网的产品介绍；后三项是 GitHub 组织上的公开仓库。这里只做概要说明，不提供利用步骤或复现过程。',
     openGithub: '打开 GitHub 组织',
@@ -127,7 +127,7 @@ const zh = {
       },
       {
         id: 'erraticgopher',
-        name: 'erraticgopher',
+        name: 'ErraticGopher',
         kind: 'github' as const,
         body: '面向授权渗透测试与红队工作的桌面工具，源码公开在 GitHub 组织下。',
       },
@@ -277,7 +277,7 @@ const en = {
     title: 'Tools',
     kicker: 'Tools & projects',
     description:
-      'Tools and public repositories associated with Gh0xE9: EagleSword, NextAssets, NextDetect, erraticgopher, open_artex, and hello-writeup.',
+      'Tools and public repositories associated with Gh0xE9: EagleSword, NextAssets, NextDetect, ErraticGopher, open_artex, and hello-writeup.',
     intro:
       'The first three are taken from product descriptions on the existing official site; the last three are public repositories under the GitHub organization. These are high-level summaries only. We do not provide exploitation steps or reproduction procedures.',
     openGithub: 'Open the GitHub organization',
@@ -304,7 +304,7 @@ const en = {
       },
       {
         id: 'erraticgopher',
-        name: 'erraticgopher',
+        name: 'ErraticGopher',
         kind: 'github' as const,
         body: 'A desktop tool for authorized penetration testing and red-team work, published under the GitHub organization.',
       },
@@ -454,7 +454,7 @@ const ko = {
     title: '도구',
     kicker: 'Tools & projects',
     description:
-      'Gh0xE9가 공개 소개한 도구와 GitHub 저장소: EagleSword, NextAssets, NextDetect, erraticgopher, open_artex, hello-writeup.',
+      'Gh0xE9가 공개 소개한 도구와 GitHub 저장소: EagleSword, NextAssets, NextDetect, ErraticGopher, open_artex, hello-writeup.',
     intro:
       '앞의 세 가지는 기존 공식 사이트의 제품 소개이고, 뒤의 세 가지는 GitHub 조직의 공개 저장소다. 여기에서는 개요만 적는다. 악용 절차나 재현 과정은 제공하지 않는다.',
     openGithub: 'GitHub 조직 열기',
@@ -481,7 +481,7 @@ const ko = {
       },
       {
         id: 'erraticgopher',
-        name: 'erraticgopher',
+        name: 'ErraticGopher',
         kind: 'github' as const,
         body: '인가된 침투 테스트와 레드팀 작업을 위한 데스크톱 도구. GitHub 조직에 공개되어 있다.',
       },
