@@ -48,7 +48,7 @@ const zh = {
     title: '团队',
     kicker: 'About the team',
     description:
-      '认识 Gh0xE9（Ghost In The Bytes）：公开可核验的团队介绍、公众号更名记录，以及 CTFtime 上的参赛记录。',
+      '认识 Gh0xE9（Ghost In The Bytes）：公开可核验的团队介绍，以及 CTFtime 上的参赛记录。',
     intro:
       'Gh0xE9，也写作 Ghost In The Bytes。在 CTFtime 上同时还记作 Ghost Happy Team。下面只写有来源的公开事实，不编造成员名单，也不虚构奖项。',
     identityKicker: 'Identity',
@@ -56,12 +56,9 @@ const zh = {
     identityLede:
       'GitHub 组织的简介是「Observe subtle clues to eliminate hidden risks」。我们把它写成「观微知著，消隐于无形」。这是站点的声音，也是工作方式。',
     identityBody:
-      '名称里的 0xE9，在 x86 指令里是一次近跳转（JMP）。这不是一段编造的创立神话，而是这个门户用来辨认自己的图形语言：在字节里看见线索，再决定跳到哪里。较早的公众号介绍里还有一句「低调说话，高调做事」，与现在的正式声音并不冲突。',
+      '名称里的 0xE9，在 x86 指令里是一次近跳转（JMP）。这不是一段编造的创立神话，而是这个门户用来辨认自己的图形语言：在字节里看见线索，再决定跳到哪里。',
     identityNote:
       'GitHub 组织创建于 2019 年 2 月 28 日。定位一栏公开写着 C:\\Windows\\lost+found\\etc，我们不强行指定单一总部地址。',
-    wechatKicker: 'WeChat',
-    wechatTitle: '公众号沿革',
-    wechatNote: '账号现名 {name}，ID {id}。以下为公开可查的更名记录。',
     ctfKicker: 'CTFtime',
     ctfTitle: '参赛记录',
     ctfLead:
@@ -237,7 +234,7 @@ const en = {
     title: 'The team',
     kicker: 'About the team',
     description:
-      'Gh0xE9 (Ghost In The Bytes): a sourced public introduction, the official-account rename history, and the CTFtime competition record.',
+      'Gh0xE9 (Ghost In The Bytes): a sourced public introduction, and the CTFtime competition record.',
     intro:
       'Gh0xE9, also written Ghost In The Bytes. On CTFtime the side is also recorded as Ghost Happy Team. What follows is sourced public fact: we do not invent a roster, and we do not invent awards.',
     identityKicker: 'Identity',
@@ -245,12 +242,9 @@ const en = {
     identityLede:
       'The GitHub organization’s bio is “Observe subtle clues to eliminate hidden risks.” We write it in Chinese as 「观微知著，消隐于无形」. That is the voice of this site, and the way the work is done.',
     identityBody:
-      'The 0xE9 in the name is a near jump (JMP) in x86. This is not an invented origin myth; it is the graphic language this portal uses to recognize itself: see the clue in the bytes, then decide where to jump. An earlier official-account blurb also said “低调说话，高调做事” — speak softly, work loudly. That does not conflict with the present, formal voice.',
+      'The 0xE9 in the name is a near jump (JMP) in x86. This is not an invented origin myth; it is the graphic language this portal uses to recognize itself: see the clue in the bytes, then decide where to jump.',
     identityNote:
       'The GitHub organization was created on 28 February 2019. The location field is published as C:\\Windows\\lost+found\\etc. We do not assert a single headquarters.',
-    wechatKicker: 'WeChat',
-    wechatTitle: 'Account history',
-    wechatNote: 'The account is currently named {name}, ID {id}. The rename history below is a matter of public record.',
     ctfKicker: 'CTFtime',
     ctfTitle: 'Competition record',
     ctfLead:
@@ -426,7 +420,7 @@ const ko = {
     title: '팀',
     kicker: 'About the team',
     description:
-      'Gh0xE9(Ghost In The Bytes)를 공개된 사실로 소개한다. 공식 계정 개명 기록과 CTFtime 대회 기록을 포함한다.',
+      'Gh0xE9(Ghost In The Bytes)를 공개된 사실로 소개한다. CTFtime 대회 기록을 포함한다.',
     intro:
       'Gh0xE9, 대외적으로는 Ghost In The Bytes. CTFtime에는 Ghost Happy Team으로도 기록되어 있다. 아래는 출처가 있는 공개 사실만 적는다. 구성원 명단을 지어내지 않고, 수상 경력도 지어내지 않는다.',
     identityKicker: 'Identity',
@@ -434,12 +428,9 @@ const ko = {
     identityLede:
       'GitHub 조직의 소개문은 “Observe subtle clues to eliminate hidden risks.”이다. 우리는 이를 「미세한 단서를 관찰해, 숨은 위험을 없앤다」고 쓴다. 이것이 이 사이트의 목소리이며, 일의 방식이기도 하다.',
     identityBody:
-      '이름 안의 0xE9는 x86 명령어에서 근거리 점프(JMP)다. 이것은 지어낸 창립 신화가 아니라, 이 포털이 자신을 알아보게 하는 그래픽 언어다. 바이트 속에서 단서를 보고, 어디로 점프할지를 정한다. 이른 시기의 공식 계정 소개에는 「말은 낮게, 일은 높게」(低调说话，高调做事)라는 구절도 있다. 지금의 공식적인 목소리와 충돌하지 않는다.',
+      '이름 안의 0xE9는 x86 명령어에서 근거리 점프(JMP)다. 이것은 지어낸 창립 신화가 아니라, 이 포털이 자신을 알아보게 하는 그래픽 언어다. 바이트 속에서 단서를 보고, 어디로 점프할지를 정한다.',
     identityNote:
       'GitHub 조직은 2019년 2월 28일에 만들어졌다. 위치란에는 C:\\Windows\\lost+found\\etc가 공개되어 있다. 우리는 하나의 본사를 단정하지 않는다.',
-    wechatKicker: 'WeChat',
-    wechatTitle: '공식 계정 연혁',
-    wechatNote: '현재 계정 이름은 {name}, ID는 {id}. 아래는 공개적으로 확인되는 개명 기록이다.',
     ctfKicker: 'CTFtime',
     ctfTitle: '대회 기록',
     ctfLead:

@@ -35,15 +35,6 @@ export const navItems = [
   { id: 'contact', path: '/contact/' },
 ] as const;
 
-export const wechatRenames = [
-  { date: '2018.06.24', name: '冰崖工作室' },
-  { date: '2018.08.08', name: '冰崖IceCliffs' },
-  { date: '2018.09.16', name: '冰崖网络' },
-  { date: '2019.08.24', name: '冰崖网络安全' },
-  { date: '2019.11.24', name: '冰崖的部落阁' },
-  { date: '2020.09.07', name: 'Gh0xE9' },
-] as const;
-
 export const ctftime = {
   id: '170814',
   alsoKnownAs: 'Ghost Happy Team',

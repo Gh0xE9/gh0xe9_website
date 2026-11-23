@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { ctftime, links, wechatRenames } from '../lib/site';
+import { ctftime, links } from '../lib/site';
 import type { Locale } from '../lib/i18n';
 import { t } from '../lib/messages';
 import Wordmark from '../components/Wordmark.astro';
@@ -11,9 +11,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const copy = t(locale);
-const wechatNote = copy.about.wechatNote
-  .replace('{name}', links.wechat.name)
-  .replace('{id}', links.wechat.id);
 ---
 
 <Base locale={locale} title={copy.about.title} description={copy.about.description} route="/ABOUT">
@@ -35,26 +32,6 @@ const wechatNote = copy.about.wechatNote
         <p>{copy.about.identityBody}</p>
         <p class="note">{copy.about.identityNote}</p>
       </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap split">
-      <div>
-        <p class="kicker">{copy.about.wechatKicker}</p>
-        <h2 class="section__title" style="font-size: clamp(2rem, 5vw, 3.4rem);">{copy.about.wechatTitle}</h2>
-        <p class="note" style="margin-top: 1rem;">{wechatNote}</p>
-      </div>
-      <ol class="timeline">
-        {
-          wechatRenames.map((item) => (
-            <li>
-              <time>{item.date}</time>
-              <span>{item.name}</span>
-            </li>
-          ))
-        }
-      </ol>
     </div>
   </section>
 
