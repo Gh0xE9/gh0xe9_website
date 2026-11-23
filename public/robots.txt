@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://team.iloli.moe/sitemap-index.xml

@@ -1,0 +1,49 @@
+---
+import Base from '../layouts/Base.astro';
+import { links, tools } from '../lib/site';
+---
+
+<Base
+  title="工具"
+  description="Gh0xE9 公开介绍过的工具与 GitHub 仓库：EagleSword、NextAssets、NextDetect，以及 erraticgopher、open_artex、hello-writeup。"
+  route="/TOOLS"
+>
+  <header class="page-hero">
+    <p class="kicker">Tools & projects</p>
+    <h1>工具</h1>
+    <p>
+      前三项摘自已有官网的产品介绍；后三项是 GitHub 组织上的公开仓库。这里只做概要说明，不提供利用步骤或复现过程。
+    </p>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="index-list">
+        {
+          tools.map((item, i) => (
+            <li>
+              <span class="no">{String(i + 1).padStart(2, '0')}</span>
+              <div>
+                {item.href ? (
+                  <a class="name" href={item.href} rel="noopener">
+                    {item.name}
+                    <span class="en">{item.kind}</span>
+                  </a>
+                ) : (
+                  <h2 class="name" style="margin: 0;">
+                    {item.name}
+                    <span class="en">{item.kind}</span>
+                  </h2>
+                )}
+              </div>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="actions">
+        <a class="btn" href={links.github} rel="noopener">打开 GitHub 组织 <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+</Base>

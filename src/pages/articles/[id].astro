@@ -1,0 +1,44 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { formatDate } from '../../lib/site';
+import { getPublishedArticles } from '../../lib/articles';
+
+export async function getStaticPaths() {
+  const posts = await getPublishedArticles();
+  return posts.map((post) => ({
+    params: { id: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const lang = post.data.lang === 'en' ? 'en' : 'zh-Hans';
+---
+
+<Base title={post.data.title} description={post.data.description} route="/ARTICLES" article>
+  <article class="article-page" lang={lang}>
+    <div class="article-shell">
+      <header>
+        <div class="meta">
+          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+          {post.data.updatedDate && <span>更新 {formatDate(post.data.updatedDate)}</span>}
+          <span>
+            {post.data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </span>
+        </div>
+        <h1>{post.data.title}</h1>
+        <p class="desc">{post.data.description}</p>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+      <div class="actions">
+        <a class="btn" href="/articles/">返回文章列表 <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </article>
+</Base>

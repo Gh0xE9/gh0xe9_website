@@ -1,0 +1,93 @@
+---
+---
+
+<canvas class="bytefield" data-bytefield aria-hidden="true"></canvas>
+
+<script>
+  const BYTES = ['47', '48', '30', '58', '45', '39', 'E9', '00', 'FF', '1A', '7F', '0D'];
+
+  function paint(canvas: HTMLCanvasElement, animate: boolean) {
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return () => {};
+
+    const state = { w: 0, h: 0, cells: [] as { x: number; y: number; v: string; e9: boolean; s: number }[], raf: 0, t: 0 };
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      state.w = window.innerWidth;
+      state.h = window.innerHeight;
+      canvas.width = Math.floor(state.w * dpr);
+      canvas.height = Math.floor(state.h * dpr);
+      canvas.style.width = `${state.w}px`;
+      canvas.style.height = `${state.h}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const gap = 86;
+      const cols = Math.ceil(state.w / gap) + 2;
+      const rows = Math.ceil(state.h / gap) + 2;
+      state.cells = [];
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          const seed = (x * 13 + y * 29) % BYTES.length;
+          const v = BYTES[seed] ?? 'E9';
+          state.cells.push({
+            x: x * gap + ((y % 2) * gap) / 2,
+            y: y * gap,
+            v,
+            e9: v === 'E9' || v === '39',
+            s: ((x + y) % 7) / 7,
+          });
+        }
+      }
+    };
+
+    const draw = (t: number) => {
+      ctx.clearRect(0, 0, state.w, state.h);
+      ctx.font = '11px "IBM Plex Mono", monospace';
+      const drift = animate ? (t / 80) % 86 : 0;
+      for (const cell of state.cells) {
+        const y = (cell.y + drift) % (state.h + 86) - 20;
+        ctx.globalAlpha = 0.35 + cell.s * 0.35;
+        ctx.fillStyle = cell.e9 ? '#e92e0c' : '#8c877b';
+        ctx.fillText(cell.v, cell.x, y);
+      }
+    };
+
+    resize();
+    draw(0);
+
+    const onResize = () => {
+      resize();
+      draw(state.t);
+    };
+    window.addEventListener('resize', onResize);
+
+    let running = animate;
+    const loop = (now: number) => {
+      if (!running) return;
+      state.t = now;
+      draw(now);
+      state.raf = requestAnimationFrame(loop);
+    };
+    if (animate) state.raf = requestAnimationFrame(loop);
+
+    return () => {
+      running = false;
+      cancelAnimationFrame(state.raf);
+      window.removeEventListener('resize', onResize);
+    };
+  }
+
+  let cleanup: (() => void) | undefined;
+
+  function mount() {
+    cleanup?.();
+    const canvas = document.querySelector('[data-bytefield]');
+    if (!(canvas instanceof HTMLCanvasElement)) return;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    cleanup = paint(canvas, !reduce);
+  }
+
+  mount();
+  document.addEventListener('astro:page-load', mount);
+</script>

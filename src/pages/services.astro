@@ -1,0 +1,43 @@
+---
+import Base from '../layouts/Base.astro';
+import { links, services } from '../lib/site';
+---
+
+<Base
+  title="业务"
+  description="Gh0xE9 的公开业务：红队渗透测试、蓝队应急响应与取证、代码审计，以及 CTF 赛事承办与训练。"
+  route="/SERVICES"
+>
+  <header class="page-hero">
+    <p class="kicker">What we do</p>
+    <h1>业务</h1>
+    <p>
+      这四项说明来自团队已有官网的公开介绍，用来说明我们做什么，而不是一份报价单。如需进一步沟通，请走联系页的公开渠道。
+    </p>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="index-list">
+        {
+          services.map((item) => (
+            <li>
+              <span class="no">{item.no}</span>
+              <div>
+                <h2 class="name" style="font-size: clamp(2rem, 4vw, 3.2rem); margin: 0;">
+                  {item.title}
+                  <span class="en">{item.titleEn}</span>
+                </h2>
+              </div>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="actions">
+        <a class="btn btn--solid" href="/contact/">联系我们 <span class="arrow" aria-hidden="true">→</span></a>
+        <a class="btn" href={links.official} rel="noopener">已有官网 <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+</Base>

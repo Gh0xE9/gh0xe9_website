@@ -1,0 +1,98 @@
+---
+import Base from '../layouts/Base.astro';
+import { ctftime, links, site, wechatRenames } from '../lib/site';
+---
+
+<Base
+  title="团队"
+  description="认识 Gh0xE9（Ghost In The Bytes）：公开可核验的团队介绍、公众号更名记录，以及 CTFtime 上的参赛记录。"
+  route="/ABOUT"
+>
+  <header class="page-hero">
+    <p class="kicker">About the team</p>
+    <h1>团队</h1>
+    <p>
+      {site.name}，也写作 {site.tagline}。在 CTFtime 上同时还记作 {ctftime.alsoKnownAs}。下面只写有来源的公开事实，不编造成员名单，也不虚构奖项。
+    </p>
+  </header>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <p class="kicker">Identity</p>
+        <h2 class="section__title" style="font-size: clamp(2rem, 5vw, 3.4rem);">观微知著</h2>
+      </div>
+      <div>
+        <p class="lede">
+          GitHub 组织的简介是「{site.mottoEn}」。我们把它写成「观微知著，消隐于无形」。这是站点的声音，也是工作方式。
+        </p>
+        <p>
+          名称里的 <strong>0xE9</strong>，在 x86 指令里是一次近跳转（JMP）。这不是一段编造的创立神话，而是这个门户用来辨认自己的图形语言：在字节里看见线索，再决定跳到哪里。较早的公众号介绍里还有一句「低调说话，高调做事」，与现在的正式声音并不冲突。
+        </p>
+        <p class="note">GitHub 组织创建于 2019 年 2 月 28 日。定位一栏公开写着 <code>C:\Windows\lost+found\etc</code>，我们不强行指定单一总部地址。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap split">
+      <div>
+        <p class="kicker">WeChat</p>
+        <h2 class="section__title" style="font-size: clamp(2rem, 5vw, 3.4rem);">公众号沿革</h2>
+        <p class="note" style="margin-top: 1rem;">账号现名 {links.wechat.name}，ID {links.wechat.id}。以下为公开可查的更名记录。</p>
+      </div>
+      <ol class="timeline">
+        {
+          wechatRenames.map((item) => (
+            <li>
+              <time>{item.date}</time>
+              <span>{item.name}</span>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="kicker">CTFtime</p>
+          <h2 class="section__title">参赛记录<span>.</span></h2>
+        </div>
+        <p class="section__note">Team 170814 · Academic team Union</p>
+      </div>
+      <p>
+        CTFtime 上写着这是一支新的 CTF 队伍，欢迎加入（{ctftime.welcome.replace(/\.$/, "")}）。目前列出的公开成员如下。
+      </p>
+      <ul class="member-list">
+        {ctftime.members.map((name) => <li>{name}</li>)}
+      </ul>
+      <p class="note">这不是完整名册，只是该页当时公开显示的名字。</p>
+      <table class="results">
+        <thead>
+          <tr>
+            <th>赛事</th>
+            <th>名次</th>
+            <th>分数</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            ctftime.events.map((row) => (
+              <tr>
+                <td>{row.name}</td>
+                <td class="num">{row.place}</td>
+                <td class="num">{row.points}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <div class="actions">
+        <a class="btn" href={links.ctftime} rel="noopener">在 CTFtime 查看 <span class="arrow" aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </section>
+</Base>
