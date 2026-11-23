@@ -2,7 +2,7 @@
 
 Gh0xE9（Ghost In The Bytes）的官方门户。静态站点，介绍团队、业务、公开工具，并提供一个用 Markdown 发布技术文章的栏目。
 
-现有官网仍是 <https://team.iloli.moe/>。本仓库是按新的视觉与信息架构重写的门户，部署前请在 `astro.config.mjs` 里把 `site` 改成实际访问地址。
+现有官网仍是 <https://team.iloli.moe/>。本仓库已按新的视觉与信息架构重写，默认发布地址是 <https://gh0xe9.top>。
 
 ## 本地开发
 
@@ -53,7 +53,8 @@ lang: zh                  # 或 en
 常见做法：
 
 - 把 `dist/` 里的内容作为站点根目录。
-- 若地址不是 `https://team.iloli.moe`，修改 `astro.config.mjs` 中的 `site`，并同步 `public/robots.txt` 里的 Sitemap 地址。
+- 默认站点地址是 `https://gh0xe9.top`。若改用其他域名，同步修改 `astro.config.mjs` 中的 `site`、`public/robots.txt` 里的 Sitemap，以及 `public/CNAME`。
+- 推到 GitHub 的 `main` 后，`.github/workflows/deploy.yml` 会构建 `dist/` 并发布到 GitHub Pages。在仓库 Settings → Pages 中把 Source 设为 GitHub Actions，Custom domain 填 `gh0xe9.top`，并打开 Enforce HTTPS。
 - 若站点挂在子路径（例如 `https://example.com/portal/`），再设置 `base: '/portal/'` 后重新构建。
 - Gitea Pages：将构建产物发布到 Pages 所用分支或目录（视实例配置而定）。推送仓库前先完成本地构建确认。
 

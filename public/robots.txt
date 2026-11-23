@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://team.iloli.moe/sitemap-index.xml
+Sitemap: https://gh0xe9.top/sitemap-index.xml
