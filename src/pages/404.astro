@@ -1,15 +1,8 @@
 ---
-import Base from '../layouts/Base.astro';
+import NotFound from '../views/NotFound.astro';
+import { localeFromPath } from '../lib/i18n';
+
+const locale = localeFromPath(Astro.url.pathname);
 ---
 
-<Base title="未找到" description="这个地址没有对应的页面。" route="/404">
-  <section class="miss">
-    <p class="kicker">Jump missed</p>
-    <h1 class="display" style="font-size: clamp(4.5rem, 18vw, 10rem);">0x404</h1>
-    <p class="lede">没有落地。这条路径上找不到页面，回到入口再跳一次。</p>
-    <div class="actions">
-      <a class="btn btn--solid" href="/">回到首页 <span class="arrow" aria-hidden="true">→</span></a>
-      <a class="btn" href="/articles/">查看文章</a>
-    </div>
-  </section>
-</Base>
+<NotFound locale={locale} />

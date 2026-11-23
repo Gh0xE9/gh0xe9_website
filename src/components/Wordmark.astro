@@ -1,0 +1,23 @@
+---
+import raw from '../assets/gh0xe9-wordmark.svg?raw';
+
+interface Props {
+  class?: string;
+  glitch?: boolean;
+}
+
+const { class: className, glitch = false } = Astro.props;
+const svg = raw.replace('<svg', '<svg class="wm__svg"');
+---
+
+{
+  glitch ? (
+    <span class:list={['wm', 'glitch', className]} data-glitch>
+      <span class="glitch__main" set:html={svg} />
+      <span class="glitch__layer glitch__layer--e9" aria-hidden="true" set:html={svg} />
+      <span class="glitch__layer glitch__layer--ph" aria-hidden="true" set:html={svg} />
+    </span>
+  ) : (
+    <span class:list={['wm', className]} set:html={svg} />
+  )
+}

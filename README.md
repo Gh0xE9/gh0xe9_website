@@ -24,7 +24,7 @@ npm run preview   # 本地预览生产构建
 
 ## 如何发布一篇文章
 
-1. 在 `src/content/articles/` 新增一个 `.md` 文件（文件名会成为网址里的 id，建议用拼音或英文短横线，例如 `ssrf-notes.md`）。
+1. 在 `src/content/articles/<lang>/` 新增一个 `.md` 文件。`<lang>` 为 `zh`、`en` 或 `ko`。文件名会成为网址里的 id，建议用拼音或英文短横线，例如 `ssrf-notes.md`。同一篇文章的三个语言版本请使用相同的文件名。
 2. 填写 frontmatter：
 
 ```md
@@ -36,13 +36,13 @@ updatedDate: 2026-11-24   # 可选
 tags:
   - 标签
 draft: false              # true 时不会出现在列表、详情和 RSS
-lang: zh                  # 或 en
+lang: zh                  # zh、en 或 ko，须与所在目录一致
 ---
 
 正文用 Markdown 写。
 ```
 
-3. 运行 `npm run build`。文章会出现在 `/articles/`，并进入 `/rss.xml`。
+3. 运行 `npm run build`。中文会出现在 `/articles/` 和 `/rss.xml`，英文在 `/en/articles/` 与 `/en/rss.xml`，韩语在 `/ko/articles/` 与 `/ko/rss.xml`。
 
 请发布团队自己撰写的内容。不要转载微信公众号或其他平台的原文。
 
@@ -60,22 +60,34 @@ lang: zh                  # 或 en
 
 本仓库不包含任何账号或口令。不要把密钥写入源码或构建产物。
 
+## 主题、语言与动效
+
+- **主题：** 暗色是暖墨、骨纸、朱红 E9 与磷光色；亮色是同一套配色的纸与墨对位，不是白底蓝按钮。右上角可切换。选择会写入 `localStorage` 的 `gh0xe9-theme`。第一次访问若还没有记录，则跟随 `prefers-color-scheme`。`<head>` 里有一段同步脚本，避免先闪错色。
+- **语言：** 默认中文在根路径。英文在 `/en/`，韩语（한국어）在 `/ko/`。页头有语言切换，会留在当前栏目。`html lang`、日期、元信息与 RSS 跟随当前语言。
+- **动效：** 主标题与页头标志有克制的 glitch（悬停时更明显，空闲时偶尔错印一闪）。向下滚动时，标题会有错印对位，列表行会横向归位，而不是每块都做淡入上浮。若系统开启 `prefers-reduced-motion`，这些动画会关闭或大幅减弱，也不会使用高频闪烁。
+
 ## 信息架构
+
+中文在根路径；把路径前加上 `/en/` 或 `/ko/` 即为对应语言。
 
 | 路径 | 内容 |
 | --- | --- |
-| `/` | 首页：识别度高的主视觉、业务、工具与最新文章 |
+| `/`、`/en/`、`/ko/` | 首页：识别度高的主视觉、业务、工具与最新文章 |
 | `/about/` | 团队介绍、公众号更名沿革、CTFtime 公开记录 |
 | `/services/` | 红队、蓝队、代码审计、CTF 承办与训练 |
 | `/tools/` | 官网介绍过的工具与 GitHub 公开仓库 |
 | `/articles/`、`/articles/<id>/` | 文章列表与正文 |
 | `/contact/` | 已有官网、GitHub、X、CTFtime、微信公众号 |
-| `/rss.xml` | 文章 RSS |
+| `/rss.xml`、`/en/rss.xml`、`/ko/rss.xml` | 按语言区分的文章 RSS |
 
 页面文案只使用已核验的公开信息，不编造成员、奖项、客户或未公开的产品。
 
 ## 视觉概念
 
-**JMP 0xE9 / 观微知著。** 0xE9 是 x86 的近跳转指令，被用作门户的识别符号，而不是一段虚构的创立故事。色彩是暖墨、骨纸和朱红（E9），辅以少量磷光色，避免常见的紫渐变或深色毛玻璃模板。字体上，超大号 Big Shoulders Display 用来写 Gh0xE9，IBM Plex Mono 承担反汇编和元信息，中文正文用 Noto Serif SC。左侧轨道、错印般的悬停残影和稀疏字节背景，都是为了让人一眼记住这是 Ghost In The Bytes。
+**JMP 0xE9 / 观微知著。** 0xE9 是 x86 的近跳转指令，被用作门户的识别符号，而不是一段虚构的创立故事。色彩是暖墨、骨纸和朱红（E9），辅以少量磷光色，避免常见的紫渐变或深色毛玻璃模板。
+
+团队既有标志已重绘为 SVG（`src/assets/gh0xe9-wordmark.svg` 与 `public/brand/gh0xe9-wordmark.svg`）：Gh 与 x 为深蓝 `#001028`，0、E、9 为朱红 `#f80010`，E9 更沉、更满。标志用在页头、首页主视觉、关于页与页脚。暗色主题下深蓝会改成骨纸色，以免沉进背景，红色保持可辨认。
+
+字体改为一套互相配套的系统，避免展示字体和正文字体互相抢：界面与标题用 IBM Plex Sans（中文 IBM Plex Sans SC，韩语 IBM Plex Sans KR），元信息与反汇编仍用 IBM Plex Mono，文章正文用 Noto Serif SC / KR。层级靠字号和字重，而不是再混一套海报字体。左侧轨道、标志的 glitch 与滚动时的错印对位，都是为了让人一眼记住这是 Ghost In The Bytes。
 
 页面预览截图在 `previews/` 目录，方便对照桌面与移动端效果。

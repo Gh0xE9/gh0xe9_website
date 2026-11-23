@@ -1,0 +1,54 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import { formatDate, localeMeta, localizeHref, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
+import { articleSlug } from '../lib/articles';
+
+interface Props {
+  locale: Locale;
+  post: CollectionEntry<'articles'>;
+}
+
+const { locale, post } = Astro.props;
+const copy = t(locale);
+const { Content } = await render(post);
+---
+
+<Base
+  locale={locale}
+  title={post.data.title}
+  description={post.data.description}
+  route="/ARTICLES"
+  article
+>
+  <article class="article-page" lang={localeMeta[locale].html}>
+    <div class="article-shell">
+      <header>
+        <div class="meta">
+          <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate, locale)}</time>
+          {post.data.updatedDate && (
+            <span>
+              {copy.articles.updated} {formatDate(post.data.updatedDate, locale)}
+            </span>
+          )}
+          <span>
+            {post.data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </span>
+        </div>
+        <h1>{post.data.title}</h1>
+        <p class="desc">{post.data.description}</p>
+      </header>
+      <div class="prose">
+        <Content />
+      </div>
+      <div class="actions">
+        <a class="btn" href={localizeHref(locale, '/articles/')}>
+          {copy.articles.back} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </article>
+</Base>

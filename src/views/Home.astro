@@ -1,0 +1,175 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../lib/site';
+import { formatDate, localizeHref, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
+import { articleSlug, getPublishedArticles } from '../lib/articles';
+import Wordmark from '../components/Wordmark.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale);
+const latest = (await getPublishedArticles(locale)).slice(0, 4);
+const repoHrefs: Record<string, string> = {
+  erraticgopher: links.repos.erraticgopher,
+  open_artex: links.repos.openArtex,
+  'hello-writeup': links.repos.helloWriteup,
+};
+---
+
+<Base locale={locale} route="/HOME">
+  <section class="hero">
+    <div class="hero__meta">
+      <span><b>0xE9</b> · x86 near jmp</span>
+      <span>{copy.motto}</span>
+    </div>
+    <h1 class="hero__mark">
+      <span class="visually-hidden">Gh0xE9</span>
+      <Wordmark class="wm--hero" glitch />
+    </h1>
+    <p class="hero__tag">Ghost In The Bytes</p>
+    <div class="hero__grid">
+      <div>
+        <p class="lede">
+          <strong>{copy.motto}</strong>
+          {copy.home.lede}
+        </p>
+        <div class="actions">
+          <a class="btn btn--solid" href={localizeHref(locale, '/articles/')}>
+            {copy.home.readArticles} <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="btn" href={localizeHref(locale, '/about/')}>
+            {copy.home.meetTeam} <span class="arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+      <pre class="disasm" aria-hidden="true">
+<span class="cmt">; Ghost In The Bytes</span>
+00401000  <span class="op">E9</span> <span class="imm">1A 00 00 00</span>    jmp  +0x1A
+00401005  47 68 6F 73 74    <span class="cmt">; "Ghost"</span>
+0040100A  20 49 6E 20       <span class="cmt">; " In "</span>
+      </pre>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="kicker">{copy.home.servicesKicker}</p>
+          <h2 class="section__title">{copy.home.servicesTitle}<span>.</span></h2>
+        </div>
+        <p class="section__note">{copy.home.servicesNote}</p>
+      </div>
+      <ul class="index-list">
+        {
+          copy.services.items.map((item) => (
+            <li>
+              <span class="no">{item.no}</span>
+              <div>
+                <h3>
+                  {item.title}
+                  <span class="en">{item.sub}</span>
+                </h3>
+              </div>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="actions">
+        <a class="btn" href={localizeHref(locale, '/services/')}>
+          {copy.home.seeServices} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="kicker">{copy.home.toolsKicker}</p>
+          <h2 class="section__title">{copy.home.toolsTitle}<span>.</span></h2>
+        </div>
+        <p class="section__note">{copy.home.toolsNote}</p>
+      </div>
+      <ul class="index-list">
+        {
+          copy.tools.items.slice(0, 4).map((item, i) => {
+            const href = repoHrefs[item.id];
+            const kind = item.kind === 'github' ? copy.tools.githubKind : copy.tools.officialKind;
+            return (
+              <li>
+                <span class="no">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  {href ? (
+                    <a class="name" href={href} rel="noopener">
+                      {item.name}
+                      <span class="en">{kind}</span>
+                    </a>
+                  ) : (
+                    <h3>
+                      {item.name}
+                      <span class="en">{kind}</span>
+                    </h3>
+                  )}
+                </div>
+                <p>{item.body}</p>
+              </li>
+            );
+          })
+        }
+      </ul>
+      <div class="actions">
+        <a class="btn" href={localizeHref(locale, '/tools/')}>
+          {copy.home.allTools} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="btn" href={links.github} rel="noopener">
+          {copy.home.githubOrg} <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section__head">
+        <div>
+          <p class="kicker">{copy.home.articlesKicker}</p>
+          <h2 class="section__title">{copy.home.articlesTitle}<span>.</span></h2>
+        </div>
+        <p class="section__note">{copy.home.articlesNote}</p>
+      </div>
+      {
+        latest.length > 0 ? (
+          <ul class="article-list">
+            {latest.map((post) => (
+              <li>
+                <a href={localizeHref(locale, `/articles/${articleSlug(post)}/`)}>
+                  <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate, locale)}</time>
+                  <h3>{post.data.title}</h3>
+                  <span class="tags">
+                    {post.data.tags.map((tag) => (
+                      <span class="tag">{tag}</span>
+                    ))}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="note">{copy.home.noArticles}</p>
+        )
+      }
+      <div class="actions">
+        <a class="btn" href={localizeHref(locale, '/articles/')}>
+          {copy.home.browseArticles} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

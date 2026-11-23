@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import { links } from '../lib/site';
+import { localizeHref, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale);
+---
+
+<Base locale={locale} title={copy.services.title} description={copy.services.description} route="/SERVICES">
+  <header class="page-hero">
+    <p class="kicker">{copy.services.kicker}</p>
+    <h1>{copy.services.title}</h1>
+    <p>{copy.services.intro}</p>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      <ul class="index-list">
+        {
+          copy.services.items.map((item) => (
+            <li>
+              <span class="no">{item.no}</span>
+              <div>
+                <h2 class="name" style="font-size: clamp(2rem, 4vw, 3.2rem); margin: 0;">
+                  {item.title}
+                  <span class="en">{item.sub}</span>
+                </h2>
+              </div>
+              <p>{item.body}</p>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="actions">
+        <a class="btn btn--solid" href={localizeHref(locale, '/contact/')}>
+          {copy.services.contactUs} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="btn" href={links.official} rel="noopener">
+          {copy.services.existingSite} <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

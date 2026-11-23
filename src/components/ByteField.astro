@@ -6,11 +6,25 @@
 <script>
   const BYTES = ['47', '48', '30', '58', '45', '39', 'E9', '00', 'FF', '1A', '7F', '0D'];
 
+  function themeColors() {
+    const light = document.documentElement.getAttribute('data-theme') === 'light';
+    return {
+      e9: '#d4270c',
+      muted: light ? '#6f6a5e' : '#8c877b',
+    };
+  }
+
   function paint(canvas: HTMLCanvasElement, animate: boolean) {
     const ctx = canvas.getContext('2d');
     if (!ctx) return () => {};
 
-    const state = { w: 0, h: 0, cells: [] as { x: number; y: number; v: string; e9: boolean; s: number }[], raf: 0, t: 0 };
+    const state = {
+      w: 0,
+      h: 0,
+      cells: [] as { x: number; y: number; v: string; e9: boolean; s: number }[],
+      raf: 0,
+      t: 0,
+    };
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -42,13 +56,14 @@
     };
 
     const draw = (t: number) => {
+      const colors = themeColors();
       ctx.clearRect(0, 0, state.w, state.h);
       ctx.font = '11px "IBM Plex Mono", monospace';
       const drift = animate ? (t / 80) % 86 : 0;
       for (const cell of state.cells) {
         const y = (cell.y + drift) % (state.h + 86) - 20;
         ctx.globalAlpha = 0.35 + cell.s * 0.35;
-        ctx.fillStyle = cell.e9 ? '#e92e0c' : '#8c877b';
+        ctx.fillStyle = cell.e9 ? colors.e9 : colors.muted;
         ctx.fillText(cell.v, cell.x, y);
       }
     };
@@ -61,6 +76,9 @@
       draw(state.t);
     };
     window.addEventListener('resize', onResize);
+
+    const observer = new MutationObserver(() => draw(state.t));
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     let running = animate;
     const loop = (now: number) => {
@@ -75,6 +93,7 @@
       running = false;
       cancelAnimationFrame(state.raf);
       window.removeEventListener('resize', onResize);
+      observer.disconnect();
     };
   }
 

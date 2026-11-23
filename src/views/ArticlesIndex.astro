@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import { formatDate, localizeHref, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
+import { articleSlug, getPublishedArticles } from '../lib/articles';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale);
+const posts = await getPublishedArticles(locale);
+---
+
+<Base locale={locale} title={copy.articles.title} description={copy.articles.description} route="/ARTICLES">
+  <header class="page-hero">
+    <p class="kicker">{copy.articles.kicker}</p>
+    <h1>{copy.articles.title}</h1>
+    <p>{copy.articles.intro}</p>
+  </header>
+
+  <section class="section">
+    <div class="wrap">
+      {
+        posts.length > 0 ? (
+          <ul class="article-list">
+            {posts.map((post) => (
+              <li>
+                <a href={localizeHref(locale, `/articles/${articleSlug(post)}/`)}>
+                  <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate, locale)}</time>
+                  <div>
+                    <h2>{post.data.title}</h2>
+                    <p class="note" style="margin: 0.35rem 0 0;">{post.data.description}</p>
+                  </div>
+                  <span class="tags">
+                    {post.data.tags.map((tag) => (
+                      <span class="tag">{tag}</span>
+                    ))}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="note">{copy.articles.empty}</p>
+        )
+      }
+    </div>
+  </section>
+</Base>

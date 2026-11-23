@@ -1,14 +1,13 @@
+import { siteUrl } from './i18n';
+
 export const site = {
   name: 'Gh0xE9',
   tagline: 'Ghost In The Bytes',
   alsoKnownAs: 'Ghost Happy Team',
   mottoZh: '观微知著，消隐于无形。',
   mottoEn: 'Observe subtle clues to eliminate hidden risks.',
-  url: 'https://team.iloli.moe',
-  description:
-    'Gh0xE9（Ghost In The Bytes）是一支安全团队：红队评估、蓝队响应与取证、代码审计，以及 CTF 赛事承办与训练。',
-  descriptionEn:
-    'Gh0xE9 — Ghost In The Bytes — is a security team working across red-team assessment, blue-team response and forensics, code audit, and CTF hosting and training.',
+  url: siteUrl,
+  officialSite: 'https://team.iloli.moe/',
 } as const;
 
 export const links = {
@@ -27,76 +26,13 @@ export const links = {
   },
 } as const;
 
-export const nav = [
-  { href: '/', label: '首页', en: 'Home', id: 'home' },
-  { href: '/about/', label: '团队', en: 'About', id: 'about' },
-  { href: '/services/', label: '业务', en: 'Services', id: 'services' },
-  { href: '/tools/', label: '工具', en: 'Tools', id: 'tools' },
-  { href: '/articles/', label: '文章', en: 'Articles', id: 'articles' },
-  { href: '/contact/', label: '联系', en: 'Contact', id: 'contact' },
-] as const;
-
-export const services = [
-  {
-    no: '01',
-    title: '红队渗透测试',
-    titleEn: 'Red Team Penetration Testing',
-    body: '面向网络与系统、Web 应用，以及社会工程与钓鱼演练的授权评估。',
-  },
-  {
-    no: '02',
-    title: '蓝队应急响应与取证',
-    titleEn: 'Blue Team Incident Response & Forensics',
-    body: '事件响应、入侵取证，以及日志与监测分析。',
-  },
-  {
-    no: '03',
-    title: '代码审计',
-    titleEn: 'Code Audit',
-    body: '静态分析、漏洞报告，以及修复建议。',
-  },
-  {
-    no: '04',
-    title: 'CTF 赛事承办与训练',
-    titleEn: 'CTF Competition Hosting & Training',
-    body: '面向高校与社区的比赛组织，以及配套的能力训练。',
-  },
-] as const;
-
-export const tools = [
-  {
-    name: 'EagleSword',
-    kind: '官方介绍',
-    body: '轻量、模块化的进攻性安全测试工具，用于资产发现、漏洞验证与内部评估。公开介绍强调模块化、自动化发现、内网辅助与高性能扫描。',
-  },
-  {
-    name: 'NextAssets',
-    kind: '官方介绍',
-    body: '面向漏洞赏金、渗透测试与演习的智能资产发现：外部资产发现、指纹识别、基础漏洞检测，以及信息泄露与薄弱点识别。',
-  },
-  {
-    name: 'NextDetect',
-    kind: '官方介绍',
-    body: '侦察阶段使用的轻量扩展，用来定位敏感信息、隐藏目录与资产位置。',
-  },
-  {
-    name: 'erraticgopher',
-    kind: 'GitHub',
-    href: links.repos.erraticgopher,
-    body: '面向授权渗透测试与红队工作的桌面工具，源码公开在 GitHub 组织下。',
-  },
-  {
-    name: 'open_artex',
-    kind: 'GitHub',
-    href: links.repos.openArtex,
-    body: 'ARTEX 衍生项目的索引仓库。',
-  },
-  {
-    name: 'hello-writeup',
-    kind: 'GitHub',
-    href: links.repos.helloWriteup,
-    body: 'CTF writeup 仓库。',
-  },
+export const navItems = [
+  { id: 'home', path: '/' },
+  { id: 'about', path: '/about/' },
+  { id: 'services', path: '/services/' },
+  { id: 'tools', path: '/tools/' },
+  { id: 'articles', path: '/articles/' },
+  { id: 'contact', path: '/contact/' },
 ] as const;
 
 export const wechatRenames = [
@@ -123,10 +59,3 @@ export const ctftime = {
     { name: 'niteCTF 2024', place: 1132, points: 10 },
   ],
 } as const;
-
-export function formatDate(date: Date): string {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}.${m}.${d}`;
-}

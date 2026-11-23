@@ -1,34 +1,67 @@
 ---
-import { nav, site } from '../lib/site';
+import { navItems, site } from '../lib/site';
+import Wordmark from './Wordmark.astro';
+import { localeMeta, locales, localizeHref, pathWithoutLocale, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
 
-const path = Astro.url.pathname;
-const normalized = path.endsWith('/') ? path : `${path}/`;
+interface Props {
+  locale: Locale;
+}
 
-function isCurrent(href: string) {
-  if (href === '/') return path === '/' || normalized === '/';
-  return normalized === href || path === href.slice(0, -1);
+const { locale } = Astro.props;
+const copy = t(locale);
+const bare = pathWithoutLocale(Astro.url.pathname);
+
+function isCurrent(path: string) {
+  if (path === '/') return bare === '/';
+  return bare === path;
 }
 ---
 
 <header class="site-header">
-  <a class="wordmark" href="/" aria-label={`${site.name}, ${site.tagline}`}>
-    <span class="wordmark__name">Gh0x<span class="e9">E9</span></span>
+  <a class="wordmark" href={localizeHref(locale, '/')} aria-label={`${site.name}, ${site.tagline}`}>
+    <Wordmark class="wm--header" glitch />
     <span class="wordmark__tag">{site.tagline}</span>
   </a>
-  <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
-    <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
-    <span class="visually-hidden">打开菜单</span>
-  </button>
-  <nav id="site-nav" class="nav" aria-label="站点">
+  <nav id="site-nav" class="nav" aria-label={copy.navAria}>
     {
-      nav.map((item) => (
-        <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
-          {item.label}
-          <small>{item.en}</small>
-        </a>
-      ))
+      navItems.map((item) => {
+        const href = localizeHref(locale, item.path);
+        const labels = copy.nav[item.id];
+        return (
+          <a href={href} aria-current={isCurrent(item.path) ? 'page' : undefined}>
+            {labels.label}
+            <small>{labels.sub}</small>
+          </a>
+        );
+      })
     }
   </nav>
+  <div class="header-tools">
+    <nav class="lang-switch" aria-label={copy.langAria}>
+      {
+        locales.map((code) => (
+          <a
+            href={localizeHref(code, bare)}
+            lang={localeMeta[code].html}
+            hrefLang={localeMeta[code].html}
+            aria-current={code === locale ? 'true' : undefined}
+            aria-label={localeMeta[code].name}
+          >
+            {localeMeta[code].short}
+          </a>
+        ))
+      }
+    </nav>
+    <button class="theme-toggle" type="button" data-theme-toggle>
+      <span class="theme-toggle__swatch" aria-hidden="true"></span>
+      <span class="visually-hidden" data-theme-label>{copy.themeToLight}</span>
+    </button>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-menu-toggle>
+      <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      <span class="visually-hidden" data-menu-label>{copy.openMenu}</span>
+    </button>
+  </div>
 </header>
 
 <style>
@@ -46,32 +79,87 @@ function isCurrent(href: string) {
 </style>
 
 <script>
-  function bindMenu() {
-    const toggle = document.querySelector('[data-menu-toggle]');
-    const label = toggle?.querySelector('.visually-hidden');
-    if (!(toggle instanceof HTMLButtonElement)) return;
+  const labels = {
+    zh: { open: '打开菜单', close: '关闭菜单', toLight: '切换为亮色主题', toDark: '切换为暗色主题' },
+    en: { open: 'Open menu', close: 'Close menu', toLight: 'Switch to light theme', toDark: 'Switch to dark theme' },
+    ko: { open: '메뉴 열기', close: '메뉴 닫기', toLight: '밝은 테마로 전환', toDark: '어두운 테마로 전환' },
+  } as const;
 
-    const setOpen = (open: boolean) => {
-      toggle.setAttribute('aria-expanded', String(open));
-      document.body.classList.toggle('nav-open', open);
-      if (label) label.textContent = open ? '关闭菜单' : '打开菜单';
-    };
+  function currentLocale(): keyof typeof labels {
+    const lang = document.documentElement.lang;
+    if (lang === 'en') return 'en';
+    if (lang === 'ko') return 'ko';
+    return 'zh';
+  }
 
-    setOpen(false);
-
-    toggle.onclick = () => {
-      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
-    };
-
-    document.onkeydown = (event) => {
-      if (event.key === 'Escape') setOpen(false);
-    };
-
-    document.querySelectorAll('#site-nav a').forEach((link) => {
-      link.addEventListener('click', () => setOpen(false));
+  function applyTheme(theme: 'light' | 'dark') {
+    document.documentElement.setAttribute('data-theme', theme);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'light' ? '#e8e1d4' : '#12110f');
+    document.querySelectorAll('[data-theme-label]').forEach((node) => {
+      const pack = labels[currentLocale()];
+      node.textContent = theme === 'dark' ? pack.toLight : pack.toDark;
+    });
+    document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+      if (btn instanceof HTMLButtonElement) {
+        const pack = labels[currentLocale()];
+        btn.setAttribute('aria-label', theme === 'dark' ? pack.toLight : pack.toDark);
+        btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+      }
     });
   }
 
-  bindMenu();
-  document.addEventListener('astro:page-load', bindMenu);
+  function readTheme(): 'light' | 'dark' {
+    try {
+      const stored = localStorage.getItem('gh0xe9-theme');
+      if (stored === 'light' || stored === 'dark') return stored;
+    } catch {
+      /* ignore */
+    }
+    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+
+  function bindChrome() {
+    const pack = labels[currentLocale()];
+    applyTheme(readTheme());
+
+    document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
+      if (!(btn instanceof HTMLButtonElement)) return;
+      btn.onclick = () => {
+        const next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+        try {
+          localStorage.setItem('gh0xe9-theme', next);
+        } catch {
+          /* ignore */
+        }
+        applyTheme(next);
+      };
+    });
+
+    const toggle = document.querySelector('[data-menu-toggle]');
+    const label = toggle?.querySelector('[data-menu-label]');
+    if (toggle instanceof HTMLButtonElement) {
+      const setOpen = (open: boolean) => {
+        toggle.setAttribute('aria-expanded', String(open));
+        document.body.classList.toggle('nav-open', open);
+        if (label) label.textContent = open ? pack.close : pack.open;
+      };
+      setOpen(false);
+      toggle.onclick = () => setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+      document.onkeydown = (event) => {
+        if (event.key === 'Escape') setOpen(false);
+      };
+      document.querySelectorAll('#site-nav a').forEach((link) => {
+        link.addEventListener('click', () => setOpen(false));
+      });
+    }
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.querySelectorAll('[data-glitch]').forEach((node) => {
+      node.classList.toggle('is-armed', !reduce);
+    });
+  }
+
+  bindChrome();
+  document.addEventListener('astro:page-load', bindChrome);
 </script>

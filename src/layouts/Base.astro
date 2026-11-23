@@ -3,64 +3,92 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ByteField from '../components/ByteField.astro';
+import ThemeInit from '../components/ThemeInit.astro';
 import { site } from '../lib/site';
+import { localeMeta, localizeHref, locales, pathWithoutLocale, siteUrl, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
 import '../styles/global.css';
 
 interface Props {
+  locale: Locale;
   title?: string;
   description?: string;
   route?: string;
   article?: boolean;
 }
 
-const { title, description = site.description, route = '/HOME', article = false } = Astro.props;
+const {
+  locale,
+  title,
+  description,
+  route = '/HOME',
+  article = false,
+} = Astro.props;
+
+const copy = t(locale);
+const meta = localeMeta[locale];
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} | ${site.tagline}`;
-const canonical = new URL(Astro.url.pathname, site.url).href;
+const pageDescription = description ?? copy.description;
+const canonical = new URL(Astro.url.pathname, siteUrl).href;
+const barePath = pathWithoutLocale(Astro.url.pathname);
+const rssHref = localizeHref(locale, '/rss.xml');
 ---
 
 <!doctype html>
-<html lang="zh-Hans">
+<html lang={meta.html}>
   <head>
     <meta charset="utf-8" />
+    <ThemeInit />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
-    <meta name="description" content={description} />
+    <meta name="description" content={pageDescription} />
     <meta name="theme-color" content="#12110f" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="alternate" type="application/rss+xml" title={`${site.name} 文章`} href="/rss.xml" />
+    <link rel="alternate" type="application/rss+xml" title={copy.rssTitle} href={rssHref} />
+    {
+      locales.map((code) => (
+        <link
+          rel="alternate"
+          hreflang={localeMeta[code].html}
+          href={new URL(localizeHref(code, barePath), siteUrl).href}
+        />
+      ))
+    }
+    <link rel="alternate" hreflang="x-default" href={new URL(localizeHref('zh', barePath), siteUrl).href} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={meta.og} />
     <meta property="og:title" content={pageTitle} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={pageDescription} />
     <meta property="og:url" content={canonical} />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="@Gh0xE9" />
     <meta name="twitter:title" content={pageTitle} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={pageDescription} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Sans+SC:wght@400;500;600;700&family=Noto+Serif+KR:wght@400;600;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
     />
     <ClientRouter />
   </head>
   <body class:list={[{ 'is-article': article }]}>
-    <a class="skip" href="#main">跳到正文</a>
+    <a class="skip" href="#main">{copy.skip}</a>
     <ByteField />
     <div class="app">
       <aside class="rail" aria-hidden="true">
-        <a class="rail__brand" href="/">{site.name}</a>
+        <a class="rail__brand" href={localizeHref(locale, '/')}>{site.name}</a>
         <div class="rail__op"><b>0x</b>E9&nbsp;JMP</div>
         <div class="rail__route">{route}</div>
       </aside>
       <div class="stage">
-        <Header />
+        <Header locale={locale} />
         <main id="main">
           <slot />
         </main>
-        <Footer />
+        <Footer locale={locale} />
       </div>
     </div>
   </body>

@@ -1,23 +1,36 @@
 ---
 import { links, site } from '../lib/site';
+import { localizeHref, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
+import Wordmark from './Wordmark.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const copy = t(locale);
 ---
 
 <footer class="site-footer">
   <div class="site-footer__row">
-    <p class="colophon">
-      <b>{site.name}</b> · {site.tagline}<br />
-      {site.mottoEn}<br />
-      {site.mottoZh} 低调说话，高调做事。
-    </p>
-    <nav class="footer-links" aria-label="站外链接">
-      <a href={links.official} rel="noopener">官网</a>
+    <div>
+      <Wordmark class="wm--footer" />
+      <p class="colophon">
+        {site.tagline}<br />
+        {site.mottoEn}<br />
+        {copy.motto} {copy.footerQuiet}
+      </p>
+    </div>
+    <nav class="footer-links" aria-label={copy.footerLinksAria}>
+      <a href={links.official} rel="noopener">{copy.officialLink}</a>
       <a href={links.github} rel="noopener">GitHub</a>
       <a href={links.x} rel="noopener">X</a>
       <a href={links.ctftime} rel="noopener">CTFtime</a>
-      <a href="/rss.xml">RSS</a>
+      <a href={localizeHref(locale, '/rss.xml')}>RSS</a>
     </nav>
   </div>
   <p class="colophon">
-    微信公众号 {links.wechat.name} · ID {links.wechat.id} · JMP 0xE9
+    {copy.wechatFooter} {links.wechat.name} · ID {links.wechat.id} · JMP 0xE9
   </p>
 </footer>

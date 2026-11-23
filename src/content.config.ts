@@ -11,7 +11,7 @@ const articles = defineCollection({
     updatedDate: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     draft: z.boolean().default(false),
-    lang: z.enum(['zh', 'en']).default('zh'),
+    lang: z.enum(['zh', 'en', 'ko']),
   }),
 });
 
