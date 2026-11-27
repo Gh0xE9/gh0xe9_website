@@ -20,7 +20,7 @@ export const links = {
   },
   wechat: {
     name: 'Gh0xE9',
-    id: 'po7mn1',
+    id: 'Gh0xE9',
   },
 } as const;
 
