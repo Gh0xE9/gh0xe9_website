@@ -5,7 +5,7 @@ export type Article = CollectionEntry<'articles'>;
 
 export function articleSlug(entry: Article): string {
   const parts = entry.id.split('/');
-  return parts[parts.length - 1] ?? entry.id;
+  return (parts[parts.length - 1] ?? entry.id).replace(/\.mdx?$/, '');
 }
 
 export async function getPublishedArticles(locale: Locale): Promise<Article[]> {

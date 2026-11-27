@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { links } from '../lib/site';
+import { links, toolRepoHrefs } from '../lib/site';
 import type { Locale } from '../lib/i18n';
 import { t } from '../lib/messages';
 
@@ -10,11 +10,7 @@ interface Props {
 
 const { locale } = Astro.props;
 const copy = t(locale);
-const repoHrefs: Record<string, string> = {
-  erraticgopher: links.repos.erraticgopher,
-  open_artex: links.repos.openArtex,
-  'hello-writeup': links.repos.helloWriteup,
-};
+const repoHrefs = toolRepoHrefs;
 ---
 
 <Base locale={locale} title={copy.tools.title} description={copy.tools.description} route="/TOOLS">

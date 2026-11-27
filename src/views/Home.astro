@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { links } from '../lib/site';
+import { links, toolRepoHrefs } from '../lib/site';
 import { formatDate, localizeHref, type Locale } from '../lib/i18n';
 import { t } from '../lib/messages';
 import { articleSlug, getPublishedArticles } from '../lib/articles';
@@ -13,11 +13,7 @@ interface Props {
 const { locale } = Astro.props;
 const copy = t(locale);
 const latest = (await getPublishedArticles(locale)).slice(0, 4);
-const repoHrefs: Record<string, string> = {
-  erraticgopher: links.repos.erraticgopher,
-  open_artex: links.repos.openArtex,
-  'hello-writeup': links.repos.helloWriteup,
-};
+const repoHrefs = toolRepoHrefs;
 ---
 
 <Base locale={locale} route="/HOME">
@@ -35,8 +31,7 @@ const repoHrefs: Record<string, string> = {
       <div class="hero__copy">
         <p class="lede">
           <strong>{copy.motto}</strong>
-          {' '}
-          {copy.home.lede}
+          {copy.home.lede ? ` ${copy.home.lede}` : null}
         </p>
         <div class="actions">
           <a class="btn btn--solid" href={localizeHref(locale, '/articles/')}>
@@ -67,7 +62,7 @@ const repoHrefs: Record<string, string> = {
         </div>
       </div>
       <p class="section__prose">{copy.home.servicesNote}</p>
-      <p class="lede">{copy.home.servicesLead}</p>
+      {copy.home.servicesLead ? <p class="lede">{copy.home.servicesLead}</p> : null}
       <div class="actions">
         <a class="btn" href={localizeHref(locale, '/services/')}>
           {copy.home.seeServices} <span class="arrow" aria-hidden="true">→</span>

@@ -14,7 +14,9 @@ export const links = {
   github: 'https://github.com/Gh0xE9',
   x: 'https://x.com/Gh0xE9',
   repos: {
-    erraticgopher: 'https://github.com/Gh0xE9/erraticgopher',
+    nextassets: 'https://github.com/Gh0xE9/NextAssets',
+    erraticgopher: 'https://github.com/Gh0xE9/ErraticGopher',
+    eaglesword: 'https://github.com/Gh0xE9/EagleSword',
     openArtex: 'https://github.com/Gh0xE9/open_artex',
     helloWriteup: 'https://github.com/Gh0xE9/hello-writeup',
   },
@@ -24,6 +26,13 @@ export const links = {
     id: 'Gh0xE9',
   },
 } as const;
+
+/** GitHub links for products that have a public repository. Internal products are omitted. */
+export const toolRepoHrefs: Record<string, string> = {
+  nextassets: links.repos.nextassets,
+  erraticgopher: links.repos.erraticgopher,
+  eaglesword: links.repos.eaglesword,
+};
 
 export const navItems = [
   { id: 'home', path: '/' },

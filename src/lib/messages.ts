@@ -216,7 +216,7 @@ const en = {
   },
   home: {
     lede:
-      'Our core directions are network defense, APT threat intelligence research, security protection, and non‑invasive brain‑computer interfaces. We settle practical experience from red‑team assessment, incident response and forensics, code audit, and CTF hosting and training into product capability, and open it to a wider range of industries.',
+      '',
     readArticles: 'Read the articles',
     meetTeam: 'Meet the team',
     servicesKicker: '01 / Services',
@@ -224,7 +224,7 @@ const en = {
     servicesNote:
       'Gh0xE9 (Ghost In The Bytes) is a research-driven technology team. Its coordinates are the shared well-being of humanity and the long future. Its core directions cover network defense, APT threat intelligence research, security protection, and non‑invasive brain‑computer interfaces. We hold to long-termism and responsible innovation, and do not pivot with short-lived trends. Instead we keep settling our long view of security, technology, and social well-being into products and platforms people can use directly, so that frontier technology can serve humanity’s common interest more steadily and more sustainably.',
     servicesLead:
-      'Gh0xE9 takes network defense, APT threat intelligence research, security protection, and non‑invasive brain‑computer interfaces as its core, and independently develops products and platforms for users. Practical capabilities such as red‑team assessment, incident response and forensics, and CTF training serve as support. This is only a brief outline; details are on the services page.',
+      '',
     seeServices: 'See the services',
     toolsKicker: '02 / Products',
     toolsTitle: 'Products',
@@ -401,7 +401,7 @@ const ko = {
   },
   home: {
     lede:
-      '우리는 네트워크 방어, APT 위협 정보 연구, 보안 보호, 비침습적 뇌-컴퓨터 인터페이스를 핵심 방향으로 삼고, 레드팀 평가, 사고 대응과 포렌식, 코드 감사, CTF 개최와 훈련에서 쌓은 실전 경험을 제품 역량으로 응축해, 더 넓은 산업에 개방한다.',
+      '',
     readArticles: '글 읽기',
     meetTeam: '팀 소개',
     servicesKicker: '01 / Services',
@@ -409,7 +409,7 @@ const ko = {
     servicesNote:
       'Gh0xE9(Ghost In The Bytes)는 연구개발형 기술 팀이다. 인류의 공동 복지와 장기적 미래를 가치의 좌표로 삼고, 핵심 방향은 네트워크 방어, APT 위협 정보 연구, 보안 보호, 비침습적 뇌-컴퓨터 인터페이스를 아우른다. 우리는 장기주의와 책임 있는 혁신을 지키며, 단기 유행에 흔들리지 않는다. 그 대신 보안, 기술, 사회 복지에 대한 장기적 판단을 사용자가 직접 쓸 수 있는 제품과 플랫폼으로 계속해서 응축해, 최전선의 기술이 더 안정적이고 지속 가능한 방식으로 인류의 공동 이익에 봉사하게 한다.',
     servicesLead:
-      'Gh0xE9는 네트워크 방어, APT 위협 정보 연구, 보안 보호, 비침습적 뇌-컴퓨터 인터페이스를 핵심으로, 사용자를 위한 제품과 플랫폼을 자체 개발한다. 레드팀 평가, 사고 대응과 포렌식, CTF 훈련 등 실전 역량은 이를 뒷받침한다. 여기는 개요만 적으며, 자세한 안내는 업무 페이지에 있다.',
+      '',
     seeServices: '업무 안내',
     toolsKicker: '02 / Products',
     toolsTitle: '제품',
