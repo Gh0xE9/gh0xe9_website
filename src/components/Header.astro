@@ -156,10 +156,6 @@ function isCurrent(path: string) {
       });
     }
 
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    document.querySelectorAll('[data-glitch]').forEach((node) => {
-      node.classList.toggle('is-armed', !reduce);
-    });
   }
 
   bindChrome();

@@ -1310,150 +1310,103 @@ body.is-article .bytefield {
   z-index: 0;
 }
 
-/* 4.8s cycle, two short bursts: ~0.3–0.8s and ~2.7–3.2s. First burst lands soon after load. */
-@keyframes glitch-idle-e9 {
-  0%, 5%, 18%, 54%, 68%, 100% {
-    opacity: 0;
-    transform: none;
-    clip-path: inset(0 0 0 0);
+/* Hover-only: a short looping RGB split. At rest the mark stays still. */
+@keyframes glitch-hover-e9 {
+  0%, 100% {
+    opacity: 0.9;
+    transform: translate(var(--glitch-x), calc(var(--glitch-y) * -0.4));
+    clip-path: inset(0 0 42% 0);
   }
-  7% {
+  16% {
     opacity: 0.95;
     transform: translate(var(--glitch-x), calc(var(--glitch-y) * -1));
     clip-path: inset(8% 0 58% 0);
   }
-  10.5% {
+  32% {
     opacity: 0.85;
     transform: translate(calc(var(--glitch-x) * -1.15), var(--glitch-y));
     clip-path: inset(48% 0 8% 0);
   }
-  14% {
+  48% {
     opacity: 0.9;
     transform: translate(calc(var(--glitch-x) * 0.7), calc(var(--glitch-y) * 0.8));
     clip-path: inset(22% 0 40% 0);
   }
-  16.5% {
-    opacity: 0;
-    transform: none;
-    clip-path: inset(0 0 0 0);
-  }
-  56% {
-    opacity: 0.9;
+  64% {
+    opacity: 0.85;
     transform: translate(calc(var(--glitch-x) * -1), var(--glitch-y));
     clip-path: inset(35% 0 20% 0);
   }
-  60% {
-    opacity: 0.8;
+  80% {
+    opacity: 0.9;
     transform: translate(calc(var(--glitch-x) * 1.15), calc(var(--glitch-y) * -1));
     clip-path: inset(10% 0 65% 0);
   }
-  64% {
-    opacity: 0.85;
-    transform: translate(calc(var(--glitch-x) * -0.7), calc(var(--glitch-y) * -0.6));
-    clip-path: inset(60% 0 12% 0);
-  }
-  66.5% {
-    opacity: 0;
-    transform: none;
-    clip-path: inset(0 0 0 0);
-  }
 }
 
-@keyframes glitch-idle-ph {
-  0%, 5%, 18%, 54%, 68%, 100% {
-    opacity: 0;
-    transform: none;
-    clip-path: inset(0 0 0 0);
+@keyframes glitch-hover-ph {
+  0%, 100% {
+    opacity: 0.75;
+    transform: translate(calc(var(--glitch-x) * -1), calc(var(--glitch-y) * 0.3));
+    clip-path: inset(48% 0 0 0);
   }
-  7.6% {
+  18% {
     opacity: 0.8;
     transform: translate(calc(var(--glitch-x) * -0.9), var(--glitch-y));
     clip-path: inset(40% 0 22% 0);
   }
-  11.2% {
+  34% {
     opacity: 0.7;
     transform: translate(var(--glitch-x), calc(var(--glitch-y) * -1));
     clip-path: inset(8% 0 68% 0);
   }
-  14.8% {
+  50% {
     opacity: 0.75;
     transform: translate(calc(var(--glitch-x) * -0.7), calc(var(--glitch-y) * 0.5));
     clip-path: inset(58% 0 10% 0);
   }
-  17.2% {
-    opacity: 0;
-    transform: none;
-    clip-path: inset(0 0 0 0);
-  }
-  56.6% {
-    opacity: 0.75;
+  66% {
+    opacity: 0.7;
     transform: translate(var(--glitch-x), calc(var(--glitch-y) * -0.8));
     clip-path: inset(18% 0 48% 0);
   }
-  60.6% {
-    opacity: 0.65;
+  82% {
+    opacity: 0.75;
     transform: translate(calc(var(--glitch-x) * -1.1), var(--glitch-y));
     clip-path: inset(52% 0 8% 0);
   }
-  64.6% {
-    opacity: 0.7;
-    transform: translate(calc(var(--glitch-x) * 0.6), calc(var(--glitch-y) * -0.5));
-    clip-path: inset(6% 0 62% 0);
-  }
-  67% {
-    opacity: 0;
-    transform: none;
-    clip-path: inset(0 0 0 0);
-  }
 }
 
-@keyframes glitch-main-nudge {
-  0%, 5%, 18%, 54%, 68%, 100% { transform: none; }
-  7.4% { transform: translate(-2px, 0); }
-  11% { transform: translate(2px, 1px); }
-  14.4% { transform: translate(-1px, 0); }
-  16.8% { transform: none; }
-  56.4% { transform: translate(2px, 0); }
-  60.4% { transform: translate(-2px, -1px); }
-  64.2% { transform: translate(1px, 0); }
-  66.8% { transform: none; }
+@keyframes glitch-hover-main {
+  0%, 100% { transform: none; }
+  18% { transform: translate(-2px, 0); }
+  36% { transform: translate(2px, 1px); }
+  54% { transform: translate(-1px, 0); }
+  72% { transform: translate(2px, 0); }
+  86% { transform: translate(-2px, -1px); }
 }
 
-/* Idle loop is CSS-native so it runs without JS or hover. */
 @media (prefers-reduced-motion: no-preference) {
-  .glitch .glitch__layer--e9 {
-    animation: glitch-idle-e9 4.8s 0.25s infinite;
+  .glitch:hover .glitch__layer--e9,
+  .glitch:focus-visible .glitch__layer--e9,
+  .wordmark:hover .glitch__layer--e9,
+  .wordmark:focus-visible .glitch__layer--e9 {
+    animation: glitch-hover-e9 0.9s linear infinite;
   }
 
-  .glitch .glitch__layer--ph {
-    animation: glitch-idle-ph 4.8s 0.25s infinite;
+  .glitch:hover .glitch__layer--ph,
+  .glitch:focus-visible .glitch__layer--ph,
+  .wordmark:hover .glitch__layer--ph,
+  .wordmark:focus-visible .glitch__layer--ph {
+    animation: glitch-hover-ph 0.9s linear infinite;
   }
 
-  .glitch .glitch__main {
-    animation: glitch-main-nudge 4.8s 0.25s infinite;
+  .glitch:hover .glitch__main,
+  .glitch:focus-visible .glitch__main,
+  .wordmark:hover .glitch__main,
+  .wordmark:focus-visible .glitch__main {
+    animation: glitch-hover-main 0.9s linear infinite;
   }
-
-  .wm--hero.glitch .glitch__layer--e9,
-  .wm--hero.glitch .glitch__layer--ph,
-  .wm--hero.glitch .glitch__main {
-    animation-delay: 0.12s;
-  }
-}
-
-.glitch:hover .glitch__layer--e9,
-.wordmark:hover .glitch__layer--e9 {
-  opacity: 0.85;
-  transform: translate(var(--glitch-x), 0);
-  clip-path: inset(0 0 42% 0);
-  animation: none;
-}
-
-.glitch:hover .glitch__layer--ph,
-.wordmark:hover .glitch__layer--ph {
-  opacity: 0.7;
-  transform: translate(calc(var(--glitch-x) * -1), 0);
-  clip-path: inset(48% 0 0 0);
-  animation: none;
 }
 
 .wordmark .glitch,
