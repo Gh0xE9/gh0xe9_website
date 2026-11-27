@@ -1,0 +1,12 @@
+---
+import ServiceVision from '../../views/ServiceVision.astro';
+import { serviceNos, type ServiceNo } from '../../lib/visions';
+
+export function getStaticPaths() {
+  return serviceNos.map((no) => ({ params: { no } }));
+}
+
+const { no } = Astro.params;
+---
+
+<ServiceVision locale="zh" no={no as ServiceNo} />

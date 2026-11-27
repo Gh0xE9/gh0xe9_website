@@ -1,0 +1,146 @@
+---
+import Base from '../layouts/Base.astro';
+import VisionFigure from '../components/VisionFigure.astro';
+import { localizeHref, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
+import { getDeck, type ServiceNo } from '../lib/visions';
+import '../styles/visions.css';
+
+interface Props {
+  locale: Locale;
+  no: ServiceNo;
+}
+
+const { locale, no } = Astro.props;
+const copy = t(locale);
+const service = copy.services.items.find((item) => item.no === no);
+const deck = getDeck(locale, no);
+
+if (!deck || !service) {
+  throw new Error(`Unknown service ${no}`);
+}
+
+const title = `${service.title} · ${copy.services.visionCta}`;
+---
+
+<Base locale={locale} title={title} description={deck.speculation} route={`/SERVICES/${no}`}>
+  <article class="deck-page">
+    <header class="page-hero">
+      <p class="kicker">{deck.kicker}</p>
+      <h1>{service.title}</h1>
+      <p>{deck.speculation}</p>
+    </header>
+
+    <div class="deck" data-deck>
+      {
+        deck.slides.map((slide, i) => (
+          <section class:list={['deck-slide', { 'is-current': i === 0 }]} data-slide={i}>
+            <div>
+              <p class="deck-slide__kicker">{slide.kicker}</p>
+              {slide.mark ? <span class="deck-slide__mark">{slide.mark}</span> : null}
+              <h2 class="deck-slide__title">{slide.title}</h2>
+              <p class="deck-slide__body">{slide.body}</p>
+            </div>
+            <div class="deck-slide__figure">
+              <VisionFigure name={slide.figure} />
+            </div>
+          </section>
+        ))
+      }
+      <nav class="deck-nav" aria-label={copy.services.visionCta}>
+        <div class="deck-nav__dots">
+          {deck.slides.map((_, i) => (
+            <button type="button" data-goto={i} class={i === 0 ? 'is-on' : undefined} aria-label={`${i + 1}`} />
+          ))}
+        </div>
+        <button type="button" class="btn" data-prev>
+          ←
+        </button>
+        <button type="button" class="btn" data-next>
+          →
+        </button>
+      </nav>
+    </div>
+
+    <div class="wrap" style="padding: 0 var(--pad) 3rem;">
+      <div class="actions">
+        <a class="btn" href={localizeHref(locale, '/services/')}>
+          {copy.services.visionBack} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="btn" href={localizeHref(locale, '/services/showcase/')}>
+          {copy.services.showcaseCta} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<script>
+  function bindDeck() {
+    const root = document.querySelector('[data-deck]');
+    if (!(root instanceof HTMLElement)) return;
+    const slides = [...root.querySelectorAll('[data-slide]')];
+    if (!slides.length) return;
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      root.classList.add('is-static');
+      slides.forEach((node) => {
+        node.classList.add('is-current');
+        node.classList.add('is-on');
+      });
+      return;
+    }
+
+    let index = 0;
+    const dots = [...root.querySelectorAll('[data-goto]')];
+    const prev = root.querySelector('[data-prev]');
+    const next = root.querySelector('[data-next]');
+
+    const go = (nextIndex: number) => {
+      index = (nextIndex + slides.length) % slides.length;
+      slides.forEach((node, i) => {
+        const on = i === index;
+        node.classList.toggle('is-current', on);
+        node.classList.toggle('is-on', on);
+      });
+      dots.forEach((dot, i) => dot.classList.toggle('is-on', i === index));
+    };
+
+    go(0);
+    prev?.addEventListener('click', () => go(index - 1));
+    next?.addEventListener('click', () => go(index + 1));
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const value = Number((dot as HTMLElement).dataset.goto);
+        if (!Number.isNaN(value)) go(value);
+      });
+    });
+
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'ArrowRight' || event.key === 'PageDown') {
+        event.preventDefault();
+        go(index + 1);
+      }
+      if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+        event.preventDefault();
+        go(index - 1);
+      }
+      if (event.key === 'Home') {
+        event.preventDefault();
+        go(0);
+      }
+      if (event.key === 'End') {
+        event.preventDefault();
+        go(slides.length - 1);
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('astro:before-swap', () => {
+      document.removeEventListener('keydown', onKey);
+    }, { once: true });
+  }
+
+  bindDeck();
+  document.addEventListener('astro:page-load', bindDeck);
+</script>
