@@ -14,7 +14,7 @@ const zh = {
   footerQuiet: '低调说话，高调做事。',
   rssTitle: 'Gh0xE9 文章',
   description:
-    'Gh0xE9（Ghost In The Bytes）是一支安全团队：红队评估、蓝队响应与取证、代码审计，以及 CTF 赛事承办与训练。',
+    'Gh0xE9（Ghost In The Bytes）是一支科技团队：提供各种各样的网络和科技咨询服务',
   motto: '观微知著，消隐于无形。',
   nav: {
     home: { label: '首页', sub: 'Home' },
@@ -26,14 +26,14 @@ const zh = {
   },
   home: {
     lede:
-      '我们做授权的红队评估、蓝队响应与取证、代码审计，也承办和训练 CTF。名字写在字节里：0xE9 是一次跳转，线索往往就在跳转之前。',
+      '我们曾做过授权的红队评估、蓝队响应与取证、代码审计，也承办和训练 CTF，现在将面向更宽广的行业取得更多认知',
     readArticles: '阅读文章',
     meetTeam: '了解团队',
     servicesKicker: '01 / Services',
     servicesTitle: '业务',
     servicesNote: '公开介绍的工作概要，不做夸大。',
     servicesLead:
-      '我们是一支综合性的团队。网络安全是工作的一部分，业务也向相邻的领域延伸。这里只作概要，详细说明在业务页。',
+      '我们是一支综合性的团队，网络安全是工作的一部分，业务也向相邻的领域延伸，这里只作概要，详细说明在业务页。',
     seeServices: '查看业务说明',
     toolsKicker: '02 / Tools',
     toolsTitle: '工具',
@@ -56,19 +56,19 @@ const zh = {
     identityKicker: 'Identity',
     identityTitle: '观微知著',
     identityLede:
-      'GitHub 组织的简介是「Observe subtle clues to eliminate hidden risks」。我们把它写成「观微知著，消隐于无形」。这是站点的声音，也是工作方式。',
+      'GitHub 组织的简介是「Observe subtle clues to eliminate hidden risks」，我们把它写成「观微知著，消隐于无形」，这是站点的声音，也是工作方式。',
     identityBody:
-      '名称里的 0xE9，在 x86 指令里是一次近跳转（JMP）。这不是一段编造的创立神话，而是这个门户用来辨认自己的图形语言：在字节里看见线索，再决定跳到哪里。',
+      '名称里的 0xE9，在 x86 指令里是一次近跳转（JMP），这不是一段编造的创立神话，而是这个门户用来辨认自己的图形语言：在字节里看见线索，再决定跳到哪里。',
     identityNote:
-      'GitHub 组织创建于 2019 年 2 月 28 日。定位一栏公开写着 C:\\Windows\\lost+found\\etc，我们不强行指定单一总部地址。',
+      'GitHub 组织创建于 2019 年 2 月 28 日。定位一栏公开写着 C:\\Windows\\lost+found\\etc',
   },
   services: {
     title: '业务',
     kicker: 'What we do',
     description:
-      'Gh0xE9 的公开业务：红队渗透测试、蓝队应急响应与取证、代码审计、CTF 赛事承办与训练，以及脑机接口、生物安全、网络防御与军工。',
+      'Gh0xE9 的公开业务：红队渗透测试、蓝队应急响应与取证、代码审计、CTF、网络防御',
     intro:
-      '前四项说明来自团队已有官网的公开介绍；其后为一并开展的其他业务。用来说明我们做什么，而不是一份报价单。如需进一步沟通，请走联系页的公开渠道。',
+      '如需进一步沟通，请走联系页的公开渠道。',
     contactUs: '联系我们',
     existingSite: '已有官网',
     items: [
@@ -113,13 +113,7 @@ const zh = {
         title: '网络防御',
         sub: 'Network Defense',
         body: '面向网络空间的防御与安全保障。',
-      },
-      {
-        no: '08',
-        title: '军工',
-        sub: 'Defense Industry',
-        body: '面向军工领域的相关工作。',
-      },
+      }
     ],
   },
   tools: {
@@ -162,7 +156,7 @@ const zh = {
         id: 'erraticvaelor',
         name: 'ErraticVaelor',
         kind: 'internal' as const,
-        body: '下一代主动进攻型人工智能武器（RCE 100%）。',
+        body: '下一代自主进攻型人工智能武器（RCE 100%）。',
       },
       {
         id: 'open_artex',
