@@ -49,9 +49,11 @@ const repoHrefs: Record<string, string> = {
       </div>
       <pre class="disasm" aria-hidden="true">
 <span class="cmt">; Ghost In The Bytes</span>
-00401000  <span class="op">E9</span> <span class="imm">1A 00 00 00</span>    jmp  +0x1A
-00401005  47 68 6F 73 74    <span class="cmt">; "Ghost"</span>
-0040100A  20 49 6E 20       <span class="cmt">; " In "</span>
+00401000  <span class="op">E9</span> <span class="imm">1A 00 00 00</span>      jmp  +0x1A
+00401005  47 68 6F 73 74      <span class="cmt">; "Ghost"</span>
+0040100A  20 49 6E 20 54      <span class="cmt">; " In T"</span>
+0040100F  68 65 20 42 79      <span class="cmt">; "he By"</span>
+00401014  74 65 73            <span class="cmt">; "tes"</span>
       </pre>
     </div>
   </section>
@@ -65,22 +67,7 @@ const repoHrefs: Record<string, string> = {
         </div>
         <p class="section__note">{copy.home.servicesNote}</p>
       </div>
-      <ul class="index-list">
-        {
-          copy.services.items.map((item) => (
-            <li>
-              <span class="no">{item.no}</span>
-              <div>
-                <h3>
-                  {item.title}
-                  <span class="en">{item.sub}</span>
-                </h3>
-              </div>
-              <p>{item.body}</p>
-            </li>
-          ))
-        }
-      </ul>
+      <p class="lede">{copy.home.servicesLead}</p>
       <div class="actions">
         <a class="btn" href={localizeHref(locale, '/services/')}>
           {copy.home.seeServices} <span class="arrow" aria-hidden="true">→</span>

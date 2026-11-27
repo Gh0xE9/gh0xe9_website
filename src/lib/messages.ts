@@ -31,7 +31,9 @@ const zh = {
     meetTeam: '了解团队',
     servicesKicker: '01 / Services',
     servicesTitle: '业务',
-    servicesNote: '公开介绍的四项工作，不做夸大。',
+    servicesNote: '公开介绍的工作概要，不做夸大。',
+    servicesLead:
+      '我们是一支综合性的团队。网络安全是工作的一部分，业务也向相邻的领域延伸。这里只作概要，详细说明在业务页。',
     seeServices: '查看业务说明',
     toolsKicker: '02 / Tools',
     toolsTitle: '工具',
@@ -64,9 +66,9 @@ const zh = {
     title: '业务',
     kicker: 'What we do',
     description:
-      'Gh0xE9 的公开业务：红队渗透测试、蓝队应急响应与取证、代码审计，以及 CTF 赛事承办与训练。',
+      'Gh0xE9 的公开业务：红队渗透测试、蓝队应急响应与取证、代码审计、CTF 赛事承办与训练，以及脑机接口、生物安全、网络防御与军工。',
     intro:
-      '这四项说明来自团队已有官网的公开介绍，用来说明我们做什么，而不是一份报价单。如需进一步沟通，请走联系页的公开渠道。',
+      '前四项说明来自团队已有官网的公开介绍；其后为一并开展的其他业务。用来说明我们做什么，而不是一份报价单。如需进一步沟通，请走联系页的公开渠道。',
     contactUs: '联系我们',
     existingSite: '已有官网',
     items: [
@@ -93,6 +95,30 @@ const zh = {
         title: 'CTF 赛事承办与训练',
         sub: 'CTF Competition Hosting & Training',
         body: '面向高校与社区的比赛组织，以及配套的能力训练。',
+      },
+      {
+        no: '05',
+        title: '脑机接口',
+        sub: 'Brain-Computer Interface',
+        body: '脑机接口领域的研究与工程工作。',
+      },
+      {
+        no: '06',
+        title: '生物安全',
+        sub: 'Biosecurity',
+        body: '生物安全相关的防护与保障工作。',
+      },
+      {
+        no: '07',
+        title: '网络防御',
+        sub: 'Network Defense',
+        body: '面向网络空间的防御与安全保障。',
+      },
+      {
+        no: '08',
+        title: '军工',
+        sub: 'Defense Industry',
+        body: '面向军工领域的相关工作。',
       },
     ],
   },
@@ -215,7 +241,9 @@ const en = {
     meetTeam: 'Meet the team',
     servicesKicker: '01 / Services',
     servicesTitle: 'Work',
-    servicesNote: 'Four lines of public work. No inflation.',
+    servicesNote: 'A brief look at the work. No inflation.',
+    servicesLead:
+      'We are a comprehensive team. Cybersecurity is part of the work, which also extends into adjacent fields. This is only a brief note; the details are on the work page.',
     seeServices: 'See the work',
     toolsKicker: '02 / Tools',
     toolsTitle: 'Tools',
@@ -248,9 +276,9 @@ const en = {
     title: 'Work',
     kicker: 'What we do',
     description:
-      'Gh0xE9’s public work: red-team penetration testing, blue-team incident response and forensics, code audit, and CTF hosting and training.',
+      'Gh0xE9’s public work: red-team penetration testing, blue-team incident response and forensics, code audit, CTF hosting and training, as well as brain-computer interface, biosecurity, network defense, and the defense industry.',
     intro:
-      'These four descriptions come from the team’s existing official site. They say what we do; they are not a rate card. For further conversation, use the public channels on the contact page.',
+      'The first four descriptions come from the team’s existing official site. The lines that follow are additional areas of work. They say what we do; they are not a rate card. For further conversation, use the public channels on the contact page.',
     contactUs: 'Contact us',
     existingSite: 'Existing site',
     items: [
@@ -277,6 +305,30 @@ const en = {
         title: 'CTF Competition Hosting & Training',
         sub: 'CTF 赛事承办与训练',
         body: 'Competition hosting for universities and communities, with supporting training.',
+      },
+      {
+        no: '05',
+        title: 'Brain-Computer Interface',
+        sub: '脑机接口',
+        body: 'Research and engineering in brain-computer interfaces.',
+      },
+      {
+        no: '06',
+        title: 'Biosecurity',
+        sub: '生物安全',
+        body: 'Protective work in biosecurity.',
+      },
+      {
+        no: '07',
+        title: 'Network Defense',
+        sub: '网络防御',
+        body: 'Defensive operations and protection in cyberspace.',
+      },
+      {
+        no: '08',
+        title: 'Defense Industry',
+        sub: '军工',
+        body: 'Work in the defense and military-industrial sector.',
       },
     ],
   },
@@ -399,7 +451,9 @@ const ko = {
     meetTeam: '팀 소개',
     servicesKicker: '01 / Services',
     servicesTitle: '업무',
-    servicesNote: '공개된 네 가지 업무. 과장하지 않는다.',
+    servicesNote: '공개된 업무의 개요. 과장하지 않는다.',
+    servicesLead:
+      '우리는 종합적인 팀이다. 사이버 보안은 업무의 한 부분이며, 인접한 분야로도 확장된다. 여기는 개요만 적고, 자세한 안내는 업무 페이지에 있다.',
     seeServices: '업무 안내',
     toolsKicker: '02 / Tools',
     toolsTitle: '도구',
@@ -432,9 +486,9 @@ const ko = {
     title: '업무',
     kicker: 'What we do',
     description:
-      'Gh0xE9의 공개 업무: 레드팀 침투 테스트, 블루팀 사고 대응과 포렌식, 코드 감사, CTF 개최와 훈련.',
+      'Gh0xE9의 공개 업무: 레드팀 침투 테스트, 블루팀 사고 대응과 포렌식, 코드 감사, CTF 개최와 훈련, 그리고 뇌-컴퓨터 인터페이스, 생물 안전, 네트워크 방어, 방위 산업.',
     intro:
-      '이 네 가지 설명은 기존 공식 사이트에 공개된 소개를 따른다. 우리가 무엇을 하는지를 말할 뿐, 견적서가 아니다. 더 깊은 이야기는 연락 페이지의 공개 창구로.',
+      '앞의 네 가지 설명은 기존 공식 사이트에 공개된 소개를 따른다. 그 아래는 함께 수행하는 다른 업무다. 우리가 무엇을 하는지를 말할 뿐, 견적서가 아니다. 더 깊은 이야기는 연락 페이지의 공개 창구로.',
     contactUs: '연락하기',
     existingSite: '기존 사이트',
     items: [
@@ -461,6 +515,30 @@ const ko = {
         title: 'CTF 대회 개최와 훈련',
         sub: 'CTF Competition Hosting & Training',
         body: '대학과 커뮤니티를 위한 대회 개최, 그리고 그에 따른 역량 훈련.',
+      },
+      {
+        no: '05',
+        title: '뇌-컴퓨터 인터페이스',
+        sub: 'Brain-Computer Interface',
+        body: '뇌-컴퓨터 인터페이스 분야의 연구와 공학 작업.',
+      },
+      {
+        no: '06',
+        title: '생물 안전',
+        sub: 'Biosecurity',
+        body: '생물 안전 분야의 방어와 보호 업무.',
+      },
+      {
+        no: '07',
+        title: '네트워크 방어',
+        sub: 'Network Defense',
+        body: '사이버 공간의 방어와 안전 보장.',
+      },
+      {
+        no: '08',
+        title: '방위 산업',
+        sub: 'Defense Industry',
+        body: '방위 산업 분야의 관련 업무.',
       },
     ],
   },

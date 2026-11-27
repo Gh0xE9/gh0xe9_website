@@ -648,18 +648,20 @@ html[lang="ko"] .page-hero h1 {
 
 .hero__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(16rem, 0.8fr);
-  gap: 2rem 3rem;
+  grid-template-columns: minmax(0, 1.15fr) minmax(22rem, max-content);
+  gap: 2rem 2.5rem;
   align-items: end;
 }
 
 .disasm {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   line-height: 1.8;
   color: var(--fog);
   border-left: 2px solid var(--e9);
   padding-left: 0.9rem;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .disasm .op {
@@ -1064,11 +1066,11 @@ html[lang="ko"] .contact-card h3 {
   height: 100%;
   pointer-events: none;
   z-index: 0;
-  opacity: 0.22;
+  opacity: 0.34;
 }
 
 body.is-article .bytefield {
-  opacity: 0.08;
+  opacity: 0.12;
 }
 
 /* ---- mobile nav ---- */
@@ -1196,7 +1198,7 @@ body.is-article .bytefield {
   }
 
   .bytefield {
-    opacity: 0.16;
+    opacity: 0.22;
   }
 }
 
