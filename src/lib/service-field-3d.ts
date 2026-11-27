@@ -140,55 +140,49 @@ export async function createServiceField3D(
   const pulseObjects: Array<(p: number, t: number, pal: Palette) => void> = [];
 
   if (mode === 'loop') {
-    const torus = new THREE.Mesh(
-      track(new THREE.TorusGeometry(1.8, 0.045, 16, 96)),
-      matStd(pal0.paper, pal0.ph, 0.35),
-    );
-    torus.rotation.x = Math.PI / 2.15;
-    root.add(torus);
-    const inner = new THREE.Mesh(
-      track(new THREE.TorusGeometry(0.85, 0.02, 12, 64)),
-      matStd(pal0.paper, pal0.e9, 0.4, 0.85),
-    );
-    inner.rotation.x = Math.PI / 2.15;
-    root.add(inner);
-    const nodes = ['ASSET', 'TRAFFIC', 'LOG', 'ALERT'].map((_, i) => {
-      const mesh = new THREE.Mesh(track(new THREE.OctahedronGeometry(0.22)), matStd(pal0.ink, pal0.e9, 0.5));
-      const a = -Math.PI / 2 + i * (Math.PI / 2);
-      mesh.position.set(Math.cos(a) * 1.8, 0.05, Math.sin(a) * 1.8);
+    grid.position.y = 0;
+    const hallPos: [number, number, number, number, number, number][] = [
+      [0, 0.55, -3.2, 1.7, 1.1, 1.3],
+      [3.2, 0.45, 0, 1.3, 0.9, 1.7],
+      [0, 0.5, 3.2, 1.8, 1.0, 1.3],
+      [-3.2, 0.6, 0, 1.3, 1.2, 1.7],
+    ];
+    const halls = hallPos.map(([x, y, z, sx, sy, sz]) => {
+      const mesh = new THREE.Mesh(track(new THREE.BoxGeometry(sx, sy, sz)), matStd(pal0.ink, pal0.e9, 0.2));
+      mesh.position.set(x, y, z);
       root.add(mesh);
+      const edge = new THREE.LineSegments(track(new THREE.EdgesGeometry(new THREE.BoxGeometry(sx + 0.02, sy + 0.02, sz + 0.02))), matLine(pal0.paper, 0.8));
+      edge.position.copy(mesh.position);
+      root.add(edge);
       return mesh;
     });
-    const sweep = new THREE.Mesh(
-      track(new THREE.ConeGeometry(0.08, 1.9, 8, 1, true)),
-      matStd(pal0.e9, pal0.e9, 0.8, 0.45),
+    const core = new THREE.Mesh(track(new THREE.BoxGeometry(1.2, 0.7, 1.2)), matStd(pal0.ink, pal0.ph, 0.35));
+    core.position.y = 0.35;
+    root.add(core);
+    const coreEdge = new THREE.LineSegments(track(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.22, 0.72, 1.22))), matLine(pal0.e9, 0.9));
+    coreEdge.position.copy(core.position);
+    root.add(coreEdge);
+    const trackRing = new THREE.Mesh(
+      track(new THREE.TorusGeometry(2.35, 0.04, 12, 96)),
+      matStd(pal0.paper, pal0.ph, 0.45),
     );
-    sweep.geometry.translate(0, 0.95, 0);
-    root.add(sweep);
-    const dots = new THREE.Points(
-      (() => {
-        const geo = track(new THREE.BufferGeometry());
-        const arr = new Float32Array(80 * 3);
-        for (let i = 0; i < 80; i++) {
-          const a = Math.random() * Math.PI * 2;
-          const r = 2.2 + Math.random() * 2.4;
-          arr[i * 3] = Math.cos(a) * r;
-          arr[i * 3 + 1] = (Math.random() - 0.5) * 1.2;
-          arr[i * 3 + 2] = Math.sin(a) * r;
-        }
-        geo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-        return geo;
-      })(),
-      track(new THREE.PointsMaterial({ color: hex(pal0.ph), size: 0.05, transparent: true, opacity: 0.85 })),
-    );
-    root.add(dots);
+    trackRing.rotation.x = Math.PI / 2;
+    trackRing.position.y = 0.08;
+    root.add(trackRing);
+    const packets = Array.from({ length: 12 }, (_, i) => {
+      const m = new THREE.Mesh(track(new THREE.SphereGeometry(0.07, 10, 8)), matStd(i % 3 === 0 ? pal0.e9 : pal0.ph, i % 3 === 0 ? pal0.e9 : pal0.ph, 0.9));
+      root.add(m);
+      return m;
+    });
     pulseObjects.push((p, t) => {
-      sweep.rotation.y = t * 0.7 + p * Math.PI * 2;
-      nodes.forEach((n, i) => {
+      halls.forEach((n, i) => {
         const on = Math.floor((t * 0.4 + p) % 4) === i;
-        n.scale.setScalar(on ? 1.25 : 1);
+        n.scale.setScalar(on ? 1.08 : 1);
       });
-      dots.rotation.y = t * 0.08;
+      packets.forEach((m, i) => {
+        const a = t * 0.5 + (i / 12) * Math.PI * 2;
+        m.position.set(Math.cos(a) * 2.35, 0.16, Math.sin(a) * 2.35);
+      });
     });
   } else if (mode === 'timeline') {
     const axis = new THREE.Mesh(
@@ -306,10 +300,23 @@ export async function createServiceField3D(
     linkGeo.setAttribute('position', new THREE.BufferAttribute(linkPos, 3));
     const links = new THREE.LineSegments(linkGeo, linkMat);
     root.add(links);
+    const rings = [1.4, 2.2, 3.1].map((r, i) => {
+      const ring = new THREE.Mesh(
+        track(new THREE.TorusGeometry(r, 0.012, 8, 80)),
+        matStd(pal0.paper, pal0.e9, 0.15, 0.7),
+      );
+      ring.rotation.x = Math.PI / 2.15;
+      ring.scale.z = 0.38 + i * 0.04;
+      root.add(ring);
+      return ring;
+    });
     pulseObjects.push((p, t) => {
       core.rotation.y = t * 0.3;
       coreEdge.rotation.y = t * 0.3;
       pts.rotation.y = t * 0.05;
+      rings.forEach((r, i) => {
+        r.rotation.z = t * (0.05 + i * 0.02);
+      });
       const confirmed = Math.floor(8 + p * 24);
       let w = 0;
       for (let i = 0; i < confirmed && w < 60; i++) {
@@ -423,7 +430,7 @@ export async function createServiceField3D(
     });
   }
 
-  root.rotation.x = -0.12;
+  if (mode !== 'loop') root.rotation.x = -0.12;
 
   let running = false;
   let raf = 0;
@@ -445,7 +452,23 @@ export async function createServiceField3D(
     pulseObjects.forEach((fn) => fn(progress, elapsed, palette));
     const leave = Math.min(1, Math.max(0, (progress - 0.88) / 0.12));
     root.position.y = -leave * 0.4;
-    camera.position.z = 7.2 + leave * 1.2;
+    if (mode === 'loop') {
+      const ang = 0.85 + progress * 0.4;
+      camera.position.set(Math.sin(ang) * 8.4, 5.8 - progress * 0.6, Math.cos(ang) * 8.4);
+      camera.lookAt(0, 0.2, 0);
+    } else if (mode === 'signals') {
+      camera.position.set(0.4, 1.4 + progress * 2.0, 7.2 - progress * 1.5);
+      camera.lookAt(0, 0, 0);
+    } else if (mode === 'protocol') {
+      camera.position.set(2.0 - progress * 0.8, 0.55, 6.6 + progress * 0.6);
+      camera.lookAt(0.3, 0.1, 0);
+    } else if (mode === 'corridor') {
+      camera.position.set(1.2 + progress, 0.8, 7.0 - progress * 0.8);
+      camera.lookAt(0, 0, 0);
+    } else {
+      camera.position.set(0, 0.5 + progress * 0.3, 7.2 + leave * 1.2);
+      camera.lookAt(0, 0, 0);
+    }
     renderer.render(scene, camera);
   };
 

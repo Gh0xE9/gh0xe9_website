@@ -18,6 +18,12 @@ const scene = getServiceScene(locale, no);
 if (!service || !scene) {
   throw new Error(`Unknown service ${no}`);
 }
+
+const railNav = {
+  zh: { prev: '上一阶段', next: '下一阶段' },
+  en: { prev: 'Previous stage', next: 'Next stage' },
+  ko: { prev: '이전 단계', next: '다음 단계' },
+}[locale];
 ---
 
 <Base
@@ -60,6 +66,25 @@ if (!service || !scene) {
           <button type="button" data-view="2d" class="is-on" aria-pressed="true">2D</button>
           <button type="button" data-view="3d" aria-pressed="false">3D</button>
         </div>
+        <nav class="sh-rail" data-rail aria-label={scene.phases.join(' / ')}>
+          <button type="button" class="sh-rail__step" data-rail-prev aria-label={railNav.prev}>↑</button>
+          {
+            scene.phases.map((label, i) => (
+              <button
+                type="button"
+                data-step={i}
+                aria-current={i === 0 ? 'step' : undefined}
+                aria-label={`${String(i + 1).padStart(2, '0')} ${label}`}
+              >
+                <span class="sh-rail__name">
+                  {String(i + 1).padStart(2, '0')} {label}
+                </span>
+                <span class="sh-rail__dot" aria-hidden="true"></span>
+              </button>
+            ))
+          }
+          <button type="button" class="sh-rail__step" data-rail-next aria-label={railNav.next}>↓</button>
+        </nav>
         <div class="sh-pin__copy">
           {
             scene.beats.map((beat, i) => (

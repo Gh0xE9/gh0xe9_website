@@ -199,6 +199,99 @@ html[lang="ko"] .sh-hero h1 {
   color: var(--paper);
 }
 
+.sh-rail {
+  position: absolute;
+  top: 50%;
+  right: var(--pad);
+  transform: translateY(-50%);
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0.2rem 0;
+}
+
+.sh-rail button {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  margin: 0;
+  padding: 0.15rem 0;
+  border: 0;
+  background: transparent;
+  color: var(--fog);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  text-align: right;
+  max-width: 11rem;
+}
+
+.sh-rail__name {
+  line-height: 1.3;
+  opacity: 0.7;
+}
+
+.sh-rail__dot {
+  width: 0.62rem;
+  height: 0.62rem;
+  flex: none;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in srgb, var(--paper) 70%, transparent);
+  background: transparent;
+  opacity: 0.55;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--ink) 70%, transparent);
+}
+
+.sh-rail button[aria-current="step"] {
+  color: var(--e9);
+}
+
+.sh-rail button[aria-current="step"] .sh-rail__name {
+  opacity: 1;
+}
+
+.sh-rail button[aria-current="step"] .sh-rail__dot {
+  background: var(--e9);
+  border-color: var(--e9);
+  opacity: 1;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--ink) 72%, transparent),
+    0 0 14px color-mix(in srgb, var(--e9) 55%, transparent);
+}
+
+.sh-rail__step {
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  opacity: 0.55;
+  color: var(--paper);
+  padding: 0.1rem 0.15rem;
+}
+
+.sh-rail__step:hover,
+.sh-rail button:hover .sh-rail__name {
+  opacity: 1;
+  color: var(--paper);
+}
+
+
+.sh-rail button:focus-visible {
+  outline: 2px solid var(--e9);
+  outline-offset: 3px;
+  color: var(--paper);
+}
+
+.sh-rail button:focus-visible .sh-rail__name,
+.sh-rail button:focus-visible .sh-rail__dot {
+  opacity: 1;
+}
+
 .sh-pin__stage canvas[hidden] {
   display: none;
 }
@@ -288,6 +381,53 @@ html[lang="ko"] .sh-read p {
   text-decoration: none;
 }
 
+@media (max-width: 700px) {
+  .sh-hero {
+    align-content: center;
+    padding-bottom: 8vh;
+  }
+
+  .sh-hero__no {
+    font-size: clamp(3.4rem, 26vw, 5.5rem);
+    top: 5.5rem;
+    right: var(--pad);
+  }
+
+  .sh-mode {
+    top: 1rem;
+    right: var(--pad);
+    bottom: auto;
+  }
+
+  .sh-rail {
+    top: auto;
+    bottom: calc(8vh + 10.5rem);
+    transform: none;
+  }
+
+  .sh-rail__name {
+    position: absolute;
+    right: 1.35rem;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    background: color-mix(in srgb, var(--ink) 82%, transparent);
+    padding: 0.15rem 0.4rem;
+  }
+
+  .sh-rail button[aria-current="step"] .sh-rail__name {
+    opacity: 1;
+  }
+
+  .sh-rail__step {
+    display: none;
+  }
+
+  .sh-beat {
+    font-size: 1.15rem;
+  }
+}
+
 /* reduced motion: no theater, still a designed long page */
 @media (prefers-reduced-motion: reduce) {
   .sh-hero__rule {
@@ -308,47 +448,54 @@ html[lang="ko"] .sh-read p {
   }
 
   .sh-pin__stage,
-  .sh-mode {
+  .sh-mode,
+  .sh-phases {
     display: none;
   }
 
-  .sh-phases {
+  .sh-rail {
     position: static;
-    padding: 0 0 1rem;
+    transform: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.6rem 1rem;
+    margin: 0 0 1.4rem;
+    padding: 0;
+  }
+
+  .sh-rail__step {
+    display: none;
+  }
+
+  .sh-rail button {
+    max-width: none;
+  }
+
+  .sh-rail__name {
+    position: static;
+    white-space: normal;
+    opacity: 1;
+    pointer-events: auto;
+    background: none;
+    padding: 0;
   }
 
   .sh-pin__copy,
-  .sh-beat {
+  .sh-beat,
+  .sh-pin__copy.is-leaving,
+  .sh-pin__copy.is-leaving .sh-beat {
     position: static;
     padding: 0;
     margin: 0 0 1.5rem;
-    opacity: 1;
+    opacity: 1 !important;
+    visibility: visible !important;
     max-width: 42rem;
+    pointer-events: auto;
   }
 
   .sh-pin__copy::before {
     display: none;
-  }
-}
-
-@media (max-width: 700px) {
-  .sh-hero {
-    align-content: center;
-    padding-bottom: 8vh;
-  }
-
-  .sh-hero__no {
-    font-size: clamp(3.4rem, 26vw, 5.5rem);
-    top: 5.5rem;
-    right: var(--pad);
-  }
-
-  .sh-mode {
-    top: auto;
-    bottom: calc(8vh + 9rem);
-  }
-
-  .sh-beat {
-    font-size: 1.15rem;
   }
 }
