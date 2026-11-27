@@ -5,8 +5,8 @@ body.is-service-hero .bytefield {
 }
 
 body.is-service-hero .site-header {
-  background: color-mix(in srgb, var(--header-bg) 42%, transparent);
-  border-bottom-color: transparent;
+  background: var(--ink);
+  border-bottom-color: var(--rule);
 }
 
 body.is-service-hero .site-footer {
@@ -29,33 +29,39 @@ body.is-service-hero .site-footer {
 .sh-hero__no {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(7rem, 22vw, 16rem);
-  line-height: 0.75;
-  letter-spacing: -0.07em;
-  color: color-mix(in srgb, var(--paper) 10%, transparent);
+  font-size: clamp(4.2rem, 16vw, 12rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: color-mix(in srgb, var(--paper) 14%, transparent);
   position: absolute;
   right: var(--pad);
-  top: 8vh;
+  top: 6vh;
   margin: 0;
   pointer-events: none;
   user-select: none;
+  max-width: calc(100% - 2 * var(--pad));
+  overflow: hidden;
 }
 
 .sh-hero h1 {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: clamp(3.2rem, 9vw, 8rem);
-  line-height: 0.92;
+  font-size: clamp(2.6rem, 7.2vw, 6.4rem);
+  line-height: 1.02;
   letter-spacing: -0.045em;
   margin: 0 0 0.6rem;
-  max-width: 12ch;
+  max-width: 18ch;
   position: relative;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
 }
 
 html[lang="zh-Hans"] .sh-hero h1,
 html[lang="ko"] .sh-hero h1 {
   letter-spacing: 0;
-  max-width: 8em;
+  max-width: min(100%, 14em);
+  word-break: keep-all;
+  text-wrap: pretty;
 }
 
 .sh-hero__sub {
@@ -125,11 +131,76 @@ html[lang="ko"] .sh-hero h1 {
 .sh-pin__copy::before {
   content: "";
   position: absolute;
-  inset: auto 0 0 0;
-  height: 70%;
-  background: linear-gradient(to top, color-mix(in srgb, var(--ink) 82%, transparent), transparent);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 78%;
+  max-width: 46rem;
+  background: linear-gradient(to top, var(--ink) 18%, color-mix(in srgb, var(--ink) 88%, transparent) 55%, transparent);
   pointer-events: none;
   z-index: -1;
+}
+
+.sh-phases {
+  position: absolute;
+  top: 1.1rem;
+  left: var(--pad);
+  right: calc(var(--pad) + 6.2rem);
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem 1.15rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  pointer-events: none;
+}
+
+.sh-phases li {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--fog);
+  opacity: 0.55;
+}
+
+.sh-phases li.is-on {
+  color: var(--e9);
+  opacity: 1;
+}
+
+.sh-mode {
+  position: absolute;
+  top: 1rem;
+  right: var(--pad);
+  z-index: 4;
+  display: inline-flex;
+  border: 1px solid var(--rule-strong);
+  background: color-mix(in srgb, var(--ink) 78%, transparent);
+}
+
+.sh-mode button {
+  appearance: none;
+  margin: 0;
+  padding: 0.4rem 0.7rem;
+  border: 0;
+  background: transparent;
+  color: var(--fog);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sh-mode button.is-on {
+  background: var(--e9);
+  color: var(--paper);
+}
+
+.sh-pin__stage canvas[hidden] {
+  display: none;
 }
 
 .sh-beat {
@@ -145,18 +216,39 @@ html[lang="ko"] .sh-hero h1 {
   bottom: 8vh;
   max-width: 38rem;
   opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
   text-wrap: pretty;
+  overflow-wrap: break-word;
+  transition: opacity 280ms var(--ease);
+}
+
+html[lang="zh-Hans"] .sh-beat,
+html[lang="ko"] .sh-beat,
+html[lang="zh-Hans"] .sh-read p,
+html[lang="ko"] .sh-read p,
+html[lang="zh-Hans"] .sh-hero h1,
+html[lang="ko"] .sh-hero h1 {
+  word-break: keep-all;
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+}
+
+.sh-pin__copy.is-leaving,
+.sh-pin__copy.is-leaving .sh-beat {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: opacity 280ms var(--ease);
 }
 
 html[lang="zh-Hans"] .sh-beat,
 html[lang="ko"] .sh-beat {
   letter-spacing: 0;
-  text-align: justify;
-  text-justify: inter-ideograph;
 }
 
 .sh-beat.is-on {
   opacity: 1;
+  visibility: visible;
 }
 
 .sh-read {
@@ -215,8 +307,14 @@ html[lang="ko"] .sh-read p {
     padding: 10vh var(--pad) 8vh;
   }
 
-  .sh-pin__stage {
+  .sh-pin__stage,
+  .sh-mode {
     display: none;
+  }
+
+  .sh-phases {
+    position: static;
+    padding: 0 0 1rem;
   }
 
   .sh-pin__copy,
@@ -240,9 +338,14 @@ html[lang="ko"] .sh-read p {
   }
 
   .sh-hero__no {
-    font-size: clamp(5rem, 34vw, 9rem);
-    top: 4vh;
-    right: 0.4rem;
+    font-size: clamp(3.4rem, 26vw, 5.5rem);
+    top: 5.5rem;
+    right: var(--pad);
+  }
+
+  .sh-mode {
+    top: auto;
+    bottom: calc(8vh + 9rem);
   }
 
   .sh-beat {

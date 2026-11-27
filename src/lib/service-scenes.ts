@@ -8,6 +8,7 @@ export type ServiceScene = {
   no: ServiceNo;
   mode: FieldMode;
   labels: string[];
+  phases: [string, string, string, string];
   beats: [string, string, string];
 };
 
@@ -26,6 +27,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '01',
       mode: 'loop',
       labels: ['ASSET', 'TRAFFIC', 'LOG', 'ALERT'],
+      phases: ['持续监测', '威胁狩猎', '防御闭环', '能力沉淀'],
       beats: [
         '面向网络空间的持续监测、威胁狩猎、防御策略设计与安全运营能力建设',
         '围绕资产、流量、日志与告警建立可落地的防御闭环',
@@ -36,6 +38,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '02',
       mode: 'timeline',
       labels: ['EVENT', 'TRACE', 'SCOPE'],
+      phases: ['事件响应', '入侵取证', '经过还原', '能力沉淀'],
       beats: [
         '面向安全事件提供事件响应、入侵取证以及日志与监测分析',
         '协助还原事件经过、定位影响范围并梳理处置要点',
@@ -46,6 +49,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '03',
       mode: 'corridor',
       labels: ['SCOPE', 'PATH', 'HOLD'],
+      phases: ['授权范围', '攻击面', '路径验证', '检测响应'],
       beats: [
         '在明确授权范围内开展红队评估、攻防演练与攻击面验证',
         '围绕真实攻击路径检验防护体系的有效性',
@@ -56,6 +60,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '04',
       mode: 'signals',
       labels: ['SIGNAL', 'TRACE', 'QUERY'],
+      phases: ['线索发现', '弱信号', '交叉验证', '防御决策'],
       beats: [
         '围绕高级持续性威胁开展线索发现、归因分析、情报生产与狩猎方法研究',
         '关注攻击链中的弱信号、基础设施痕迹与行为模式',
@@ -66,6 +71,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '05',
       mode: 'protocol',
       labels: ['PROTOCOL', 'DATAFLOW', 'SOFTWARE ONLY'],
+      phases: ['协议研究', '软件仿真', '交互验证', '安全与合规'],
       beats: [
         '聚焦非侵入式脑机接口的协议研究、软件仿真与交互流程验证',
         '当前仅在软件层面开展模拟，不涉及人体实验、临床用途或医疗诊断',
@@ -76,6 +82,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '06',
       mode: 'ground',
       labels: ['HOST', 'DESIGN', 'REVIEW'],
+      phases: ['赛事承办', '赛题设计', '环境保障', '赛后复盘'],
       beats: [
         '面向高校或政企提供 CTF 赛事承办、赛题设计与配套能力训练',
         '覆盖比赛组织、题目构建、环境保障和赛后复盘等环节',
@@ -88,6 +95,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '01',
       mode: 'loop',
       labels: ['ASSET', 'TRAFFIC', 'LOG', 'ALERT'],
+      phases: ['Monitoring', 'Hunting', 'Defensive loop', 'Product capability'],
       beats: [
         'Continuous monitoring, threat hunting, defensive strategy design, and security-operations capability building for cyberspace.',
         'Around assets, traffic, logs, and alerts we establish a defensive loop that can actually be run.',
@@ -98,6 +106,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '02',
       mode: 'timeline',
       labels: ['EVENT', 'TRACE', 'SCOPE'],
+      phases: ['Response', 'Forensics', 'Reconstruction', 'Capability'],
       beats: [
         'For security incidents we provide incident response, intrusion forensics, and log and monitoring analysis,',
         'helping reconstruct what happened, locate the scope of impact, and sort out the points of handling.',
@@ -108,6 +117,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '03',
       mode: 'corridor',
       labels: ['SCOPE', 'PATH', 'HOLD'],
+      phases: ['Authorization / Scope', 'Attack-surface review', 'Path validation', 'Detection and response'],
       beats: [
         'Within a clearly authorized scope we conduct red-team assessment, attack-defense exercises, and attack-surface validation,',
         'testing the effectiveness of a protection system along real attack paths.',
@@ -118,6 +128,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '04',
       mode: 'signals',
       labels: ['SIGNAL', 'TRACE', 'QUERY'],
+      phases: ['Clue discovery', 'Weak signals', 'Cross-check', 'Defensive decision'],
       beats: [
         'Around advanced persistent threats we conduct clue discovery, attribution analysis, intelligence production, and research on hunting methods.',
         'We attend to weak signals, infrastructure traces, and behavioral patterns in the attack chain,',
@@ -128,6 +139,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '05',
       mode: 'protocol',
       labels: ['PROTOCOL', 'DATAFLOW', 'SOFTWARE ONLY'],
+      phases: ['Protocol', 'Software simulation', 'Interaction validation', 'Security and compliance'],
       beats: [
         'We focus on protocol research, software simulation, and interaction-flow validation for non-invasive brain-computer interfaces.',
         'At present the work is simulation at the software layer only, and does not involve human experiments, clinical use, or medical diagnosis.',
@@ -138,6 +150,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '06',
       mode: 'ground',
       labels: ['HOST', 'DESIGN', 'REVIEW'],
+      phases: ['Hosting', 'Challenge design', 'Environment', 'After-action review'],
       beats: [
         'For universities or government and enterprise we provide CTF competition hosting, challenge design, and supporting capability training,',
         'covering organization, challenge construction, environment support, and after-action review.',
@@ -150,6 +163,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '01',
       mode: 'loop',
       labels: ['ASSET', 'TRAFFIC', 'LOG', 'ALERT'],
+      phases: ['지속 모니터링', '위협 헌팅', '방어 루프', '역량 응축'],
       beats: [
         '사이버 공간을 향한 지속 모니터링, 위협 헌팅, 방어 전략 설계, 보안 운영 역량 구축.',
         '자산, 트래픽, 로그, 경보를 중심으로 실제로 운영할 수 있는 방어 루프를 세운다.',
@@ -160,6 +174,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '02',
       mode: 'timeline',
       labels: ['EVENT', 'TRACE', 'SCOPE'],
+      phases: ['사고 대응', '침입 포렌식', '경과 재구성', '역량 응축'],
       beats: [
         '보안 사고를 대상으로 사고 대응, 침입 포렌식, 로그 및 모니터링 분석을 제공하며,',
         '사건의 경과를 재구성하고 영향 범위를 파악하며 조치 요점을 정리하는 일을 돕는다.',
@@ -170,6 +185,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '03',
       mode: 'corridor',
       labels: ['SCOPE', 'PATH', 'HOLD'],
+      phases: ['인가 범위', '공격 표면', '경로 검증', '탐지와 대응'],
       beats: [
         '명확히 인가된 범위 안에서 레드팀 평가, 공방 훈련, 공격 표면 검증을 수행하며,',
         '실제 공격 경로를 따라 방어 체계의 유효성을 시험한다.',
@@ -180,6 +196,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '04',
       mode: 'signals',
       labels: ['SIGNAL', 'TRACE', 'QUERY'],
+      phases: ['단서 발견', '약한 신호', '교차 검증', '방어 결정'],
       beats: [
         '지능형 지속 위협을 둘러싸고 단서 발견, 귀속 분석, 정보 생산, 헌팅 방법 연구를 수행한다.',
         '공격 사슬 안의 약한 신호, 인프라 흔적, 행동 패턴에 주목하며,',
@@ -190,6 +207,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '05',
       mode: 'protocol',
       labels: ['PROTOCOL', 'DATAFLOW', 'SOFTWARE ONLY'],
+      phases: ['프로토콜', '소프트웨어 시뮬레이션', '상호작용 검증', '보안과 준법'],
       beats: [
         '비침습적 뇌-컴퓨터 인터페이스의 프로토콜 연구, 소프트웨어 시뮬레이션, 상호작용 흐름 검증에 초점을 둔다.',
         '현재는 소프트웨어 계층의 모의만 수행하며, 인체 실험, 임상 용도, 의료 진단은 포함하지 않는다.',
@@ -200,6 +218,7 @@ const scenes: Record<Locale, Record<ServiceNo, ServiceScene>> = {
       no: '06',
       mode: 'ground',
       labels: ['HOST', 'DESIGN', 'REVIEW'],
+      phases: ['대회 개최', '문제 설계', '환경 보장', '사후 복기'],
       beats: [
         '대학 또는 정부·기업을 대상으로 CTF 대회 개최, 문제 설계, 그에 따른 역량 훈련을 제공하며,',
         '대회 조직, 문제 구축, 환경 보장, 사후 복기 등의 과정을 아우른다.',

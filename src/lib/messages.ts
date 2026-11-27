@@ -204,7 +204,7 @@ const en = {
   footerQuiet: 'Speak softly, work loudly.',
   rssTitle: 'Gh0xE9 articles',
   description:
-    'Gh0xE9 (Ghost In The Bytes) is a research-driven technology team. Its coordinates are the shared well-being of humanity and the long future. Its core directions cover network defense, APT threat intelligence research, security protection, and non-invasive brain-computer interfaces. We hold to long-termism and responsible innovation, and do not pivot with short-lived trends. Instead we keep settling our long view of security, technology, and social well-being into products and platforms people can use directly, so that frontier technology can serve humanity’s common interest more steadily and more sustainably.',
+    'Gh0xE9 (Ghost In The Bytes) is a research-driven technology team. Its coordinates are the shared well-being of humanity and the long future. Its core directions cover network defense, APT threat intelligence research, security protection, and non‑invasive brain‑computer interfaces. We hold to long-termism and responsible innovation, and do not pivot with short-lived trends. Instead we keep settling our long view of security, technology, and social well-being into products and platforms people can use directly, so that frontier technology can serve humanity’s common interest more steadily and more sustainably.',
   motto: 'Observe subtle clues to eliminate hidden risks.',
   nav: {
     home: { label: 'Home', sub: '首页' },
@@ -216,15 +216,15 @@ const en = {
   },
   home: {
     lede:
-      'Our core directions are network defense, APT threat intelligence research, security protection, and non-invasive brain-computer interfaces. We settle practical experience from red-team assessment, incident response and forensics, code audit, and CTF hosting and training into product capability, and open it to a wider range of industries.',
+      'Our core directions are network defense, APT threat intelligence research, security protection, and non‑invasive brain‑computer interfaces. We settle practical experience from red‑team assessment, incident response and forensics, code audit, and CTF hosting and training into product capability, and open it to a wider range of industries.',
     readArticles: 'Read the articles',
     meetTeam: 'Meet the team',
     servicesKicker: '01 / Services',
     servicesTitle: 'Services',
     servicesNote:
-      'Gh0xE9 (Ghost In The Bytes) is a research-driven technology team. Its coordinates are the shared well-being of humanity and the long future. Its core directions cover network defense, APT threat intelligence research, security protection, and non-invasive brain-computer interfaces. We hold to long-termism and responsible innovation, and do not pivot with short-lived trends. Instead we keep settling our long view of security, technology, and social well-being into products and platforms people can use directly, so that frontier technology can serve humanity’s common interest more steadily and more sustainably.',
+      'Gh0xE9 (Ghost In The Bytes) is a research-driven technology team. Its coordinates are the shared well-being of humanity and the long future. Its core directions cover network defense, APT threat intelligence research, security protection, and non‑invasive brain‑computer interfaces. We hold to long-termism and responsible innovation, and do not pivot with short-lived trends. Instead we keep settling our long view of security, technology, and social well-being into products and platforms people can use directly, so that frontier technology can serve humanity’s common interest more steadily and more sustainably.',
     servicesLead:
-      'Gh0xE9 takes network defense, APT threat intelligence research, security protection, and non-invasive brain-computer interfaces as its core, and independently develops products and platforms for users. Practical capabilities such as red-team assessment, incident response and forensics, and CTF training serve as support. This is only a brief outline; details are on the services page.',
+      'Gh0xE9 takes network defense, APT threat intelligence research, security protection, and non‑invasive brain‑computer interfaces as its core, and independently develops products and platforms for users. Practical capabilities such as red‑team assessment, incident response and forensics, and CTF training serve as support. This is only a brief outline; details are on the services page.',
     seeServices: 'See the services',
     toolsKicker: '02 / Products',
     toolsTitle: 'Products',
@@ -243,7 +243,7 @@ const en = {
     description:
       'The core directions and public information of Gh0xE9 (Ghost In The Bytes).',
     intro:
-      'Gh0xE9, also written Ghost In The Bytes, is positioned to research next-generation network defense, APT threat intelligence, security protection, and non-invasive brain-computer interfaces. With practical security experience as the base, the team turns research into products and platforms people can use directly.',
+      'Gh0xE9, also written Ghost In The Bytes, is positioned to research next-generation network defense, APT threat intelligence, security protection, and non‑invasive brain‑computer interfaces. With practical security experience as the base, the team turns research into products and platforms people can use directly.',
     identityKicker: 'Identity',
     identityTitle: '观微知著',
     identityLede:
@@ -277,7 +277,7 @@ const en = {
         no: '03',
         title: 'Red Team Assessment',
         sub: 'Red Team Assessment & Adversary Emulation',
-        body: 'Within a clearly authorized scope we conduct red-team assessment, attack-defense exercises, and attack-surface validation, testing the effectiveness of a protection system along real attack paths. The results are used to find defensive gaps, verify detection and response capability, and drive continual improvement of security policy and product capability.',
+        body: 'Within a clearly authorized scope we conduct red‑team assessment, attack-defense exercises, and attack-surface validation, testing the effectiveness of a protection system along real attack paths. The results are used to find defensive gaps, verify detection and response capability, and drive continual improvement of security policy and product capability.',
       },
       {
         no: '04',
@@ -289,7 +289,7 @@ const en = {
         no: '05',
         title: 'Non-invasive Brain-Computer Interface',
         sub: 'Non-invasive Brain-Computer Interface',
-        body: 'We focus on protocol research, software simulation, and interaction-flow validation for non-invasive brain-computer interfaces. At present the work is simulation at the software layer only, and does not involve human experiments, clinical use, or medical diagnosis. The research covers protocol design, data flow and processing, validation of interactive applications, and questions of data security, privacy protection, and compliant use.',
+        body: 'We focus on protocol research, software simulation, and interaction-flow validation for non‑invasive brain‑computer interfaces. At present the work is simulation at the software layer only, and does not involve human experiments, clinical use, or medical diagnosis. The research covers protocol design, data flow and processing, validation of interactive applications, and questions of data security, privacy protection, and compliant use.',
       },
       {
         no: '06',
@@ -319,7 +319,7 @@ const en = {
         id: 'erraticgopher',
         name: 'ErraticGopher',
         kind: 'github' as const,
-        body: 'A desktop tool for authorized penetration testing and red-team work. The source is published under the GitHub organization.',
+        body: 'A desktop tool for authorized penetration testing and red‑team work. The source is published under the GitHub organization.',
       },
       {
         id: 'eaglesword',
@@ -337,7 +337,7 @@ const en = {
         id: 'intellentropy',
         name: 'IntellEntropy',
         kind: 'internal' as const,
-        body: 'Research and software-simulated implementation of a non-invasive brain-computer interface protocol. It is currently in a software-simulation stage, focused on protocol design and validation of data flow and interaction, and does not involve human experiments or clinical use',
+        body: 'Research and software-simulated implementation of a non‑invasive brain‑computer interface protocol. It is currently in a software-simulation stage, focused on protocol design and validation of data flow and interaction, and does not involve human experiments or clinical use',
       },
     ],
   },

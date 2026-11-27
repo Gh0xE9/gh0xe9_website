@@ -27,7 +27,13 @@ if (!service || !scene) {
   route={`/SERVICES/${no}`}
   serviceHero
 >
-  <article class="sh" data-service-field data-mode={scene.mode} data-labels={scene.labels.join(',')}>
+  <article
+    class="sh"
+    data-service-field
+    data-mode={scene.mode}
+    data-labels={scene.labels.join(',')}
+    data-phases={scene.phases.join(',')}
+  >
     <header class="sh-hero">
       <p class="sh-hero__no" aria-hidden="true">{service.no}</p>
       <h1>{service.title}</h1>
@@ -38,7 +44,21 @@ if (!service || !scene) {
     <section class="sh-pin" data-pin>
       <div class="sh-pin__sticky">
         <div class="sh-pin__stage">
-          <canvas></canvas>
+          <canvas data-view="2d"></canvas>
+          <canvas data-view="3d" hidden></canvas>
+        </div>
+        <ol class="sh-phases" aria-hidden="true">
+          {
+            scene.phases.map((label, i) => (
+              <li data-phase={i} class:list={{ 'is-on': i === 0 }}>
+                {String(i + 1).padStart(2, '0')} {label}
+              </li>
+            ))
+          }
+        </ol>
+        <div class="sh-mode" data-mode-toggle>
+          <button type="button" data-view="2d" class="is-on" aria-pressed="true">2D</button>
+          <button type="button" data-view="3d" aria-pressed="false">3D</button>
         </div>
         <div class="sh-pin__copy">
           {

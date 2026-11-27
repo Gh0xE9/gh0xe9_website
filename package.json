@@ -14,8 +14,9 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.6",
-    "astro": "^7.4.13"
+    "astro": "^7.4.13",
+    "three": "^0.187.0"
   },
-  "description": "Official portal for Gh0xE9 \u2014 Ghost In The Bytes.",
+  "description": "Official portal for Gh0xE9 — Ghost In The Bytes.",
   "private": true
 }
