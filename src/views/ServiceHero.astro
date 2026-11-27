@@ -2,8 +2,9 @@
 import Base from '../layouts/Base.astro';
 import { localizeHref, type Locale } from '../lib/i18n';
 import { t } from '../lib/messages';
-import { getServiceScene, type ServiceNo } from '../lib/service-scenes';
-import '../styles/service-hero.css';
+import { getServiceDeck, getDeckUi } from '../lib/showcase-content';
+import { getFieldMode, serviceNos, type ServiceNo } from '../lib/service-scenes';
+import '../styles/showcase.css';
 
 interface Props {
   locale: Locale;
@@ -13,17 +14,14 @@ interface Props {
 const { locale, no } = Astro.props;
 const copy = t(locale);
 const service = copy.services.items.find((item) => item.no === no);
-const scene = getServiceScene(locale, no);
+if (!service) throw new Error(`Unknown service ${no}`);
 
-if (!service || !scene) {
-  throw new Error(`Unknown service ${no}`);
-}
-
-const railNav = {
-  zh: { prev: '上一阶段', next: '下一阶段' },
-  en: { prev: 'Previous stage', next: 'Next stage' },
-  ko: { prev: '이전 단계', next: '다음 단계' },
-}[locale];
+const deck = getServiceDeck(locale, no);
+const ui = getDeckUi(locale);
+const mode = getFieldMode(no);
+const idx = serviceNos.indexOf(no);
+const nextNo = serviceNos[(idx + 1) % serviceNos.length];
+const nextService = copy.services.items.find((item) => item.no === nextNo);
 ---
 
 <Base
@@ -33,81 +31,132 @@ const railNav = {
   route={`/SERVICES/${no}`}
   serviceHero
 >
-  <article
-    class="sh"
-    data-service-field
-    data-mode={scene.mode}
-    data-labels={scene.labels.join(',')}
-    data-phases={scene.phases.join(',')}
-  >
-    <header class="sh-hero">
-      <p class="sh-hero__no" aria-hidden="true">{service.no}</p>
-      <h1>{service.title}</h1>
-      <p class="sh-hero__sub">{service.sub}</p>
-      <div class="sh-hero__rule" aria-hidden="true"></div>
-    </header>
+  <div class="dk" data-deck data-mode={mode} data-scene="boot">
+    <canvas class="dk-bg" data-bg aria-hidden="true"></canvas>
+    <div class="dk-scan" aria-hidden="true"></div>
+    <div class="dk-grain" aria-hidden="true"></div>
+    <div class="dk-frame" aria-hidden="true"></div>
+    <div class="dk-progress" aria-hidden="true"><i data-progress></i></div>
 
-    <section class="sh-pin" data-pin>
-      <div class="sh-pin__sticky">
-        <div class="sh-pin__stage">
-          <canvas data-view="2d"></canvas>
-          <canvas data-view="3d" hidden></canvas>
-        </div>
-        <ol class="sh-phases" aria-hidden="true">
-          {
-            scene.phases.map((label, i) => (
-              <li data-phase={i} class:list={{ 'is-on': i === 0 }}>
-                {String(i + 1).padStart(2, '0')} {label}
-              </li>
-            ))
-          }
-        </ol>
-        <div class="sh-mode" data-mode-toggle>
-          <button type="button" data-view="2d" class="is-on" aria-pressed="true">2D</button>
-          <button type="button" data-view="3d" aria-pressed="false">3D</button>
-        </div>
-        <nav class="sh-rail" data-rail aria-label={scene.phases.join(' / ')}>
-          <button type="button" class="sh-rail__step" data-rail-prev aria-label={railNav.prev}>↑</button>
-          {
-            scene.phases.map((label, i) => (
-              <button
-                type="button"
-                data-step={i}
-                aria-current={i === 0 ? 'step' : undefined}
-                aria-label={`${String(i + 1).padStart(2, '0')} ${label}`}
-              >
-                <span class="sh-rail__name">
-                  {String(i + 1).padStart(2, '0')} {label}
-                </span>
-                <span class="sh-rail__dot" aria-hidden="true"></span>
-              </button>
-            ))
-          }
-          <button type="button" class="sh-rail__step" data-rail-next aria-label={railNav.next}>↓</button>
-        </nav>
-        <div class="sh-pin__copy">
-          {
-            scene.beats.map((beat, i) => (
-              <p class:list={['sh-beat', { 'is-on': i === 0 }]} data-beat={i}>
-                {beat}
+    <div class="dk-stage" data-stage>
+      {
+        deck.scenes.map((scene, i) => (
+          <section class="dk-scene" data-kind={scene.kind} data-name={scene.name}>
+            <div class="dk-scene__inner">
+              <p class="dk-kicker">
+                {scene.kind === 'stage'
+                  ? `STAGE ${String(scene.stageNo).padStart(2, '0')} / ${String(scene.stageCount).padStart(2, '0')} — ${scene.kicker}`
+                  : scene.kicker}
               </p>
-            ))
-          }
-        </div>
+              {i === 0 ? (
+                <h1 class="dk-title">{scene.title}</h1>
+              ) : (
+                <h2 class="dk-title">{scene.title}</h2>
+              )}
+
+              {scene.kind === 'boot' && (
+                <p class="dk-addr" aria-hidden="true">
+                  0xE9::SERVICES/{no}
+                </p>
+              )}
+
+              {scene.body && <p class="dk-body">{scene.body}</p>}
+
+              {scene.lines && (
+                <ul class="dk-lines">
+                  {scene.lines.map((line) => (
+                    <li>{line}</li>
+                  ))}
+                </ul>
+              )}
+
+              {scene.kind === 'outro' && (
+                <nav class="dk-outro" aria-label={copy.services.title}>
+                  <a class="dk-outro__row" href={localizeHref(locale, '/services/')}>
+                    <span class="dk-outro__idx">↩</span>
+                    <span class="dk-outro__name">{ui.backToServices}</span>
+                  </a>
+                  {nextService && (
+                    <a class="dk-outro__row" href={localizeHref(locale, `/services/${nextNo}/`)}>
+                      <span class="dk-outro__idx">{nextNo}</span>
+                      <span class="dk-outro__name">
+                        {ui.nextService} — {nextService.title}
+                      </span>
+                    </a>
+                  )}
+                  <a class="dk-outro__row" href={localizeHref(locale, '/contact/')}>
+                    <span class="dk-outro__idx">@</span>
+                    <span class="dk-outro__name">{ui.contact}</span>
+                  </a>
+                </nav>
+              )}
+            </div>
+            {scene.kind === 'boot' && (
+              <p class="dk-no" aria-hidden="true">
+                {no}
+              </p>
+            )}
+            {scene.kind === 'stage' && (
+              <p class="dk-stage-no" aria-hidden="true">
+                {String(scene.stageNo).padStart(2, '0')}
+                <span>/{String(scene.stageCount).padStart(2, '0')}</span>
+              </p>
+            )}
+          </section>
+        ))
+      }
+    </div>
+
+    <div class="dk-chrome">
+      <p class="dk-counter" aria-hidden="true">
+        <b data-counter-cur>01</b>
+        <span>{ui.sceneOf}{String(deck.scenes.length).padStart(2, '0')}</span>
+        <em data-counter-name>{deck.scenes[0].name}</em>
+      </p>
+      <div class="dk-actions">
+        <button
+          type="button"
+          class="dk-play"
+          data-play
+          data-play-label={ui.play}
+          data-pause-label={ui.pause}
+          aria-pressed="false"
+        >
+          <svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 1.5v9l7-4.5z" /></svg>
+          <span>{ui.play}</span>
+        </button>
+        <a class="dk-exit" href={localizeHref(locale, '/services/')}>✕</a>
       </div>
-    </section>
+    </div>
 
-    <section class="sh-read">
-      <p>{service.body}</p>
-    </section>
+    <nav class="dk-rail" data-rail aria-label={service.title}>
+      {
+        deck.scenes.map((scene, i) => (
+          <button type="button" data-goto={i} aria-current={i === 0 ? 'true' : undefined}>
+            <span class="dk-rail__name">
+              {String(i + 1).padStart(2, '0')} {scene.name}
+            </span>
+            <span class="dk-rail__dot" aria-hidden="true" />
+          </button>
+        ))
+      }
+    </nav>
 
-    <a class="sh-back" href={localizeHref(locale, '/services/')}>← {copy.services.title}</a>
-  </article>
+    <div class="dk-jmp" data-jmp aria-hidden="true">
+      <span class="dk-jmp__bar"></span>
+      <span class="dk-jmp__text" data-jmp-text></span>
+    </div>
+
+    <p class="dk-hint" data-hint aria-hidden="true">
+      <span class="dk-hint__key">↓</span>
+      {ui.scrollHint}
+    </p>
+  </div>
 </Base>
 
 <script>
-  import { bindServiceField } from '../lib/service-field';
+  import { initShowcase } from '../lib/showcase-engine';
 
-  bindServiceField();
-  document.addEventListener('astro:page-load', bindServiceField);
+  initShowcase();
+  document.addEventListener('astro:page-load', initShowcase);
 </script>
