@@ -18,6 +18,7 @@ export const links = {
     openArtex: 'https://github.com/Gh0xE9/open_artex',
     helloWriteup: 'https://github.com/Gh0xE9/hello-writeup',
   },
+  email: 'contact@gh0xe9.top',
   wechat: {
     name: 'Gh0xE9',
     id: 'Gh0xE9',

@@ -21,7 +21,7 @@ const repoHrefs: Record<string, string> = {
   <header class="page-hero">
     <p class="kicker">{copy.tools.kicker}</p>
     <h1>{copy.tools.title}</h1>
-    <p>{copy.tools.intro}</p>
+    {copy.tools.intro ? <p>{copy.tools.intro}</p> : null}
   </header>
 
   <section class="section">

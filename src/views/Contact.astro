@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import { links } from '../lib/site';
-import type { Locale } from '../lib/i18n';
+import { localizeHref, type Locale } from '../lib/i18n';
 import { t } from '../lib/messages';
 
 interface Props {
@@ -16,13 +16,13 @@ const copy = t(locale);
   <header class="page-hero">
     <p class="kicker">{copy.contact.kicker}</p>
     <h1>{copy.contact.title}</h1>
-    <p>{copy.contact.intro}</p>
+    {copy.contact.intro ? <p>{copy.contact.intro}</p> : null}
   </header>
 
   <section class="section">
     <div class="wrap">
       <div class="contact-grid">
-        <a class="contact-card" href={links.official} rel="noopener">
+        <a class="contact-card" href={localizeHref(locale, '/')} >
           <span class="kind">Official</span>
           <h3>{copy.contact.officialTitle}</h3>
           <p>gh0xe9.top</p>
@@ -41,6 +41,16 @@ const copy = t(locale);
           <span class="kind">WeChat</span>
           <h3>{copy.contact.wechatTitle}</h3>
           <p>{links.wechat.name} · ID {links.wechat.id}</p>
+        </div>
+        <a class="contact-card" href={`mailto:${links.email}`}>
+          <span class="kind">Mail</span>
+          <h3>{copy.contact.emailTitle}</h3>
+          <p>{links.email}</p>
+        </a>
+        <div class="contact-card">
+          <span class="kind">Locus</span>
+          <h3>{copy.contact.locationTitle}</h3>
+          <p>{copy.contact.location}</p>
         </div>
       </div>
       <p class="note" style="margin-top: 2rem;">{copy.contact.welcome}</p>

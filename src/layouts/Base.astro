@@ -28,7 +28,7 @@ const {
 const copy = t(locale);
 const meta = localeMeta[locale];
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} | ${site.tagline}`;
-const pageDescription = description ?? copy.description;
+const pageDescription = (description && description.trim()) || copy.description;
 const canonical = new URL(Astro.url.pathname, siteUrl).href;
 const barePath = pathWithoutLocale(Astro.url.pathname);
 const rssHref = localizeHref(locale, '/rss.xml');

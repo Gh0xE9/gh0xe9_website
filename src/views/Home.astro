@@ -32,7 +32,7 @@ const repoHrefs: Record<string, string> = {
     </h1>
     <p class="hero__tag">Ghost In The Bytes</p>
     <div class="hero__grid">
-      <div>
+      <div class="hero__copy">
         <p class="lede">
           <strong>{copy.motto}</strong>
           {' '}
@@ -65,12 +65,15 @@ const repoHrefs: Record<string, string> = {
           <p class="kicker">{copy.home.servicesKicker}</p>
           <h2 class="section__title">{copy.home.servicesTitle}<span>.</span></h2>
         </div>
-        <p class="section__note">{copy.home.servicesNote}</p>
       </div>
+      <p class="section__prose">{copy.home.servicesNote}</p>
       <p class="lede">{copy.home.servicesLead}</p>
       <div class="actions">
         <a class="btn" href={localizeHref(locale, '/services/')}>
           {copy.home.seeServices} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="btn" href={localizeHref(locale, '/services/showcase/')}>
+          {copy.services.showcaseCta} <span class="arrow" aria-hidden="true">→</span>
         </a>
       </div>
     </div>

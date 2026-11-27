@@ -456,7 +456,15 @@ html[lang="ko"] .display {
   font-size: clamp(1.05rem, 1.6vw, 1.25rem);
   line-height: 1.75;
   color: var(--paper-2);
-  max-width: 38rem;
+  max-width: 36rem;
+  text-wrap: pretty;
+}
+
+html[lang="zh-Hans"] .lede,
+html[lang="ko"] .lede {
+  text-align: justify;
+  text-justify: inter-ideograph;
+  hanging-punctuation: allow-end;
 }
 
 .lede strong {
@@ -503,6 +511,21 @@ html[lang="ko"] .section__title {
   color: var(--fog);
   max-width: 16rem;
   text-align: right;
+}
+
+.section__prose {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: var(--paper-2);
+  max-width: 42rem;
+  margin: 0 0 1.25rem;
+  text-wrap: pretty;
+}
+
+html[lang="zh-Hans"] .section__prose,
+html[lang="ko"] .section__prose {
+  text-align: justify;
+  text-justify: inter-ideograph;
 }
 
 .wrap {
@@ -557,6 +580,7 @@ html[lang="ko"] .page-hero h1 {
   border: 1px solid var(--rule-strong);
   color: var(--paper);
   background: transparent;
+  white-space: nowrap;
   transition: background 180ms var(--ease), color 180ms var(--ease), border-color 180ms var(--ease), transform 180ms var(--ease);
 }
 
@@ -653,6 +677,15 @@ html[lang="ko"] .page-hero h1 {
   align-items: end;
 }
 
+.hero__copy {
+  min-width: 0;
+  width: min(100%, 34rem);
+}
+
+.hero__copy .lede {
+  max-width: none;
+}
+
 .disasm {
   font-family: var(--font-mono);
   font-size: 0.78rem;
@@ -737,6 +770,22 @@ html[lang="ko"] .index-list .name {
   margin: 0;
   color: var(--paper-2);
   max-width: 36rem;
+}
+
+.index-list .service-links {
+  margin-top: 0.7rem;
+}
+
+.index-list .service-links a {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--e9);
+}
+
+.index-list .service-links a:hover {
+  color: var(--paper);
 }
 
 .index-list a.row:hover .name,

@@ -26,10 +26,15 @@ const copy = t(locale);
       <a href={links.official} rel="noopener">{copy.officialLink}</a>
       <a href={links.github} rel="noopener">GitHub</a>
       <a href={links.x} rel="noopener">X</a>
+      <a href={`mailto:${links.email}`}>{links.email}</a>
       <a href={localizeHref(locale, '/rss.xml')}>RSS</a>
     </nav>
   </div>
   <p class="colophon">
-    {copy.wechatFooter} {links.wechat.name} · ID {links.wechat.id} · JMP 0xE9
+    {copy.wechatFooter} {links.wechat.name} · ID {links.wechat.id}
+    <br />
+    {copy.contact.locationTitle} · {copy.contact.location}
+    <br />
+    JMP 0xE9
   </p>
 </footer>

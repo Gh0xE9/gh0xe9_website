@@ -16,7 +16,7 @@ const copy = t(locale);
   <header class="page-hero">
     <p class="kicker">{copy.services.kicker}</p>
     <h1>{copy.services.title}</h1>
-    <p>{copy.services.intro}</p>
+    {copy.services.intro ? <p>{copy.services.intro}</p> : null}
   </header>
 
   <section class="section">
@@ -31,6 +31,9 @@ const copy = t(locale);
                   {item.title}
                   <span class="en">{item.sub}</span>
                 </h2>
+                <p class="service-links">
+                  <a href={localizeHref(locale, `/services/${item.no}/`)}>{copy.services.visionCta}</a>
+                </p>
               </div>
               <p>{item.body}</p>
             </li>
@@ -38,7 +41,10 @@ const copy = t(locale);
         }
       </ul>
       <div class="actions">
-        <a class="btn btn--solid" href={localizeHref(locale, '/contact/')}>
+        <a class="btn btn--solid" href={localizeHref(locale, '/services/showcase/')}>
+          {copy.services.showcaseCta} <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a class="btn" href={localizeHref(locale, '/contact/')}>
           {copy.services.contactUs} <span class="arrow" aria-hidden="true">→</span>
         </a>
         <a class="btn" href={links.official} rel="noopener">

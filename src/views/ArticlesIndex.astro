@@ -17,7 +17,7 @@ const posts = await getPublishedArticles(locale);
   <header class="page-hero">
     <p class="kicker">{copy.articles.kicker}</p>
     <h1>{copy.articles.title}</h1>
-    <p>{copy.articles.intro}</p>
+    {copy.articles.intro ? <p>{copy.articles.intro}</p> : null}
   </header>
 
   <section class="section">
