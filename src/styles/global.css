@@ -1419,25 +1419,25 @@ body.is-article .bytefield {
   66.8% { transform: none; }
 }
 
-.glitch.is-armed .glitch__layer--e9 {
-  animation: glitch-idle-e9 4.8s 0.25s infinite;
-}
+/* Idle loop is CSS-native so it runs without JS or hover. */
+@media (prefers-reduced-motion: no-preference) {
+  .glitch .glitch__layer--e9 {
+    animation: glitch-idle-e9 4.8s 0.25s infinite;
+  }
 
-.glitch.is-armed .glitch__layer--ph {
-  animation: glitch-idle-ph 4.8s 0.25s infinite;
-}
+  .glitch .glitch__layer--ph {
+    animation: glitch-idle-ph 4.8s 0.25s infinite;
+  }
 
-.glitch.is-armed .glitch__main {
-  animation: glitch-main-nudge 4.8s 0.25s infinite;
-}
+  .glitch .glitch__main {
+    animation: glitch-main-nudge 4.8s 0.25s infinite;
+  }
 
-.wm--hero.glitch.is-armed .glitch__layer--e9 {
-  animation-delay: 0.12s;
-}
-
-.wm--hero.glitch.is-armed .glitch__layer--ph,
-.wm--hero.glitch.is-armed .glitch__main {
-  animation-delay: 0.12s;
+  .wm--hero.glitch .glitch__layer--e9,
+  .wm--hero.glitch .glitch__layer--ph,
+  .wm--hero.glitch .glitch__main {
+    animation-delay: 0.12s;
+  }
 }
 
 .glitch:hover .glitch__layer--e9,
@@ -1564,8 +1564,8 @@ body.is-article .bytefield {
     scroll-behavior: auto;
   }
 
-  .glitch.is-armed .glitch__layer,
-  .glitch.is-armed .glitch__main,
+  .glitch .glitch__layer,
+  .glitch .glitch__main,
   .glitch:hover .glitch__layer,
   .wordmark:hover .glitch__layer {
     animation: none !important;

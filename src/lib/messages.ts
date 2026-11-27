@@ -14,7 +14,7 @@ const zh = {
   footerQuiet: '低调说话，高调做事。',
   rssTitle: 'Gh0xE9 文章',
   description:
-    'Gh0xE9（Ghost In The Bytes）是一支科技团队：提供各种各样的网络和科技咨询服务',
+    'Gh0xE9（Ghost In The Bytes）是一支科技团队：提供各种各样的网络和科技咨询服务。',
   motto: '观微知著，消隐于无形。',
   nav: {
     home: { label: '首页', sub: 'Home' },
@@ -26,7 +26,7 @@ const zh = {
   },
   home: {
     lede:
-      '我们曾做过授权的红队评估、蓝队响应与取证、代码审计，也承办和训练 CTF，现在将面向更宽广的行业取得更多认知',
+      '我们曾做过授权的红队评估、蓝队响应与取证、代码审计，也承办和训练 CTF，现在将面向更宽广的行业取得更多认知。',
     readArticles: '阅读文章',
     meetTeam: '了解团队',
     servicesKicker: '01 / Services',
@@ -60,13 +60,13 @@ const zh = {
     identityBody:
       '名称里的 0xE9，在 x86 指令里是一次近跳转（JMP），这不是一段编造的创立神话，而是这个门户用来辨认自己的图形语言：在字节里看见线索，再决定跳到哪里。',
     identityNote:
-      'GitHub 组织创建于 2019 年 2 月 28 日。定位一栏公开写着 C:\\Windows\\lost+found\\etc',
+      'GitHub 组织创建于 2019 年 2 月 28 日。定位一栏公开写着 C:\\Windows\\lost+found\\etc。',
   },
   services: {
     title: '业务',
     kicker: 'What we do',
     description:
-      'Gh0xE9 的公开业务：红队渗透测试、蓝队应急响应与取证、代码审计、CTF、网络防御',
+      'Gh0xE9 的公开业务：红队渗透测试、蓝队应急响应与取证、代码审计、CTF、网络防御。',
     intro:
       '如需进一步沟通，请走联系页的公开渠道。',
     contactUs: '联系我们',
@@ -218,7 +218,7 @@ const en = {
   footerQuiet: 'Speak softly, work loudly.',
   rssTitle: 'Gh0xE9 articles',
   description:
-    'Gh0xE9 — Ghost In The Bytes — is a security team working across red-team assessment, blue-team response and forensics, code audit, and CTF hosting and training.',
+    'Gh0xE9 (Ghost In The Bytes) is a technology team that provides a range of network and technology consulting services.',
   motto: 'Observe subtle clues to eliminate hidden risks.',
   nav: {
     home: { label: 'Home', sub: '首页' },
@@ -230,7 +230,7 @@ const en = {
   },
   home: {
     lede:
-      'We do authorized red-team assessments, blue-team response and forensics, code audit, and CTF hosting and training. The name lives in the bytes: 0xE9 is a jump. The clue is usually just before it.',
+      'We have done authorized red-team assessments, blue-team response and forensics, code audit, and CTF hosting and training. We are now looking toward a wider range of industries to deepen what we know.',
     readArticles: 'Read the articles',
     meetTeam: 'Meet the team',
     servicesKicker: '01 / Services',
@@ -264,15 +264,15 @@ const en = {
     identityBody:
       'The 0xE9 in the name is a near jump (JMP) in x86. This is not an invented origin myth; it is the graphic language this portal uses to recognize itself: see the clue in the bytes, then decide where to jump.',
     identityNote:
-      'The GitHub organization was created on 28 February 2019. The location field is published as C:\\Windows\\lost+found\\etc. We do not assert a single headquarters.',
+      'The GitHub organization was created on 28 February 2019. The location field is published as C:\\Windows\\lost+found\\etc.',
   },
   services: {
     title: 'Work',
     kicker: 'What we do',
     description:
-      'Gh0xE9’s public work: red-team penetration testing, blue-team incident response and forensics, code audit, CTF hosting and training, as well as brain-computer interface, biosecurity, network defense, and the defense industry.',
+      'Gh0xE9’s public work: red-team penetration testing, blue-team incident response and forensics, code audit, CTF, and network defense.',
     intro:
-      'The first four descriptions come from the team’s existing official site. The lines that follow are additional areas of work. They say what we do; they are not a rate card. For further conversation, use the public channels on the contact page.',
+      'For further conversation, use the public channels on the contact page.',
     contactUs: 'Contact us',
     existingSite: 'Existing site',
     items: [
@@ -318,12 +318,6 @@ const en = {
         sub: '网络防御',
         body: 'Defensive operations and protection in cyberspace.',
       },
-      {
-        no: '08',
-        title: 'Defense Industry',
-        sub: '军工',
-        body: 'Work in the defense and military-industrial sector.',
-      },
     ],
   },
   tools: {
@@ -366,7 +360,7 @@ const en = {
         id: 'erraticvaelor',
         name: 'ErraticVaelor',
         kind: 'internal' as const,
-        body: 'Next-generation offensive AI weapon (RCE 100%).',
+        body: 'Next-generation autonomous offensive AI weapon (RCE 100%).',
       },
       {
         id: 'open_artex',
@@ -428,7 +422,7 @@ const ko = {
   footerQuiet: '말은 낮게, 일은 높게.',
   rssTitle: 'Gh0xE9 글',
   description:
-    'Gh0xE9(Ghost In The Bytes)는 레드팀 평가, 블루팀 대응과 포렌식, 코드 감사, CTF 개최와 훈련을 하는 보안 팀이다.',
+    'Gh0xE9(Ghost In The Bytes)는 다양한 네트워크와 기술 컨설팅을 제공하는 기술 팀이다.',
   motto: '미세한 단서를 관찰해, 숨은 위험을 없앤다.',
   nav: {
     home: { label: '홈', sub: 'Home' },
@@ -440,7 +434,7 @@ const ko = {
   },
   home: {
     lede:
-      '우리는 인가된 레드팀 평가, 블루팀 대응과 포렌식, 코드 감사, 그리고 CTF 개최와 훈련을 한다. 이름은 바이트 안에 있다. 0xE9는 한 번의 점프이고, 단서는 대개 그 직전에 있다.',
+      '우리는 인가된 레드팀 평가, 블루팀 대응과 포렌식, 코드 감사, CTF 개최와 훈련을 해 왔다. 이제는 더 넓은 산업으로 눈을 돌려 이해를 넓혀 간다.',
     readArticles: '글 읽기',
     meetTeam: '팀 소개',
     servicesKicker: '01 / Services',
@@ -451,7 +445,7 @@ const ko = {
     seeServices: '업무 안내',
     toolsKicker: '02 / Tools',
     toolsTitle: '도구',
-    toolsNote: '공식 사이트와 공개 GitHub 저장소에서.',
+    toolsNote: '공식 사이트 소개와 공개 GitHub 저장소에서 가져왔다.',
     allTools: '모든 도구와 프로젝트',
     githubOrg: 'GitHub 조직',
     articlesKicker: '03 / Articles',
@@ -474,15 +468,15 @@ const ko = {
     identityBody:
       '이름 안의 0xE9는 x86 명령어에서 근거리 점프(JMP)다. 이것은 지어낸 창립 신화가 아니라, 이 포털이 자신을 알아보게 하는 그래픽 언어다. 바이트 속에서 단서를 보고, 어디로 점프할지를 정한다.',
     identityNote:
-      'GitHub 조직은 2019년 2월 28일에 만들어졌다. 위치란에는 C:\\Windows\\lost+found\\etc가 공개되어 있다. 우리는 하나의 본사를 단정하지 않는다.',
+      'GitHub 조직은 2019년 2월 28일에 만들어졌다. 위치란에는 C:\\Windows\\lost+found\\etc가 공개되어 있다.',
   },
   services: {
     title: '업무',
     kicker: 'What we do',
     description:
-      'Gh0xE9의 공개 업무: 레드팀 침투 테스트, 블루팀 사고 대응과 포렌식, 코드 감사, CTF 개최와 훈련, 그리고 뇌-컴퓨터 인터페이스, 생물 안전, 네트워크 방어, 방위 산업.',
+      'Gh0xE9의 공개 업무: 레드팀 침투 테스트, 블루팀 사고 대응과 포렌식, 코드 감사, CTF, 네트워크 방어.',
     intro:
-      '앞의 네 가지 설명은 기존 공식 사이트에 공개된 소개를 따른다. 그 아래는 함께 수행하는 다른 업무다. 우리가 무엇을 하는지를 말할 뿐, 견적서가 아니다. 더 깊은 이야기는 연락 페이지의 공개 창구로.',
+      '더 깊은 이야기는 연락 페이지의 공개 창구로.',
     contactUs: '연락하기',
     existingSite: '기존 사이트',
     items: [
@@ -528,12 +522,6 @@ const ko = {
         sub: 'Network Defense',
         body: '사이버 공간의 방어와 안전 보장.',
       },
-      {
-        no: '08',
-        title: '방위 산업',
-        sub: 'Defense Industry',
-        body: '방위 산업 분야의 관련 업무.',
-      },
     ],
   },
   tools: {
@@ -576,7 +564,7 @@ const ko = {
         id: 'erraticvaelor',
         name: 'ErraticVaelor',
         kind: 'internal' as const,
-        body: '차세대 능동 공격형 인공지능 무기(RCE 100%).',
+        body: '차세대 자율 공격형 인공지능 무기(RCE 100%).',
       },
       {
         id: 'open_artex',
