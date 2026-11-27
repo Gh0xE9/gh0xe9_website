@@ -1,29 +1,15 @@
 /* ============================================================
    Gh0xE9 service deck — "paper instrument" showcase
    A light blueprint sheet: hairline ink, dial ticks, red marks.
-   The deck carries its own palette (scoped on .dk) so it reads
-   as a projection sheet in either site theme; while the deck is
-   live the site chrome is flipped to the same paper palette.
+   The deck keeps its paper-instrument typography and layout in
+   both site themes. Light is the original blueprint sheet; dark
+   is the same instrument on ink, following html[data-theme].
    ============================================================ */
 
-/* ---- palette flip for the whole viewport while deck is live ---- */
+/* ---- layout lock while the deck is live (colors follow theme) ---- */
 
 body.dk-lock {
   overflow: hidden;
-  --ink: #edeae2;
-  --ink-2: #e4e0d5;
-  --ink-3: #d7d2c4;
-  --paper: #24272d;
-  --paper-2: #3d4149;
-  --paper-dim: #6b6e76;
-  --fog: #8b8778;
-  --e9: #df382a;
-  --phosphor: #35897f;
-  --rule: rgba(36, 39, 45, 0.14);
-  --rule-strong: rgba(36, 39, 45, 0.34);
-  --rail-bg: #edeae2;
-  --header-bg: rgba(237, 234, 226, 0.86);
-  background: #edeae2;
 }
 
 body.dk-lock .site-footer,
@@ -36,17 +22,10 @@ body.dk-lock .site-header {
   -webkit-backdrop-filter: none;
 }
 
-/* the wordmark's ink paths are themed light on dark — force them
-   back to ink while the paper sheet is up (needs to outrank the
-   :root[data-theme] rule) */
-html body.dk-lock .wm-ink {
-  fill: #24272d !important;
-}
-
-/* ---- deck sheet ------------------------------------------------ */
-
-.dk {
-  /* blueprint palette, local to the sheet (live + static) */
+/* Light: the original paper-instrument sheet */
+.dk,
+html[data-theme="light"] body.dk-lock,
+html[data-theme="light"] .dk {
   --ink: #edeae2;
   --ink-2: #e4e0d5;
   --ink-3: #d7d2c4;
@@ -60,7 +39,51 @@ html body.dk-lock .wm-ink {
   --rule: rgba(36, 39, 45, 0.14);
   --rule-strong: rgba(36, 39, 45, 0.34);
   --dk-grid: rgba(36, 39, 45, 0.055);
+  --dk-on-e9: #edeae2;
+}
 
+html[data-theme="light"] body.dk-lock {
+  --rail-bg: #edeae2;
+  --header-bg: rgba(237, 234, 226, 0.86);
+  background: #edeae2;
+}
+
+html[data-theme="light"] body.dk-lock .wm-ink {
+  fill: #24272d !important;
+}
+
+/* Dark: the same instrument on ink */
+html[data-theme="dark"] .dk,
+html[data-theme="dark"] body.dk-lock {
+  --ink: #12110f;
+  --ink-2: #1b1915;
+  --ink-3: #26231e;
+  --paper: #e8e1d4;
+  --paper-2: #d5cec0;
+  --paper-dim: #b7b0a2;
+  --fog: #8c877b;
+  --e9: #e92e0c;
+  --e9-deep: #9d1f0a;
+  --phosphor: #4ec8b4;
+  --rule: rgba(232, 225, 212, 0.14);
+  --rule-strong: rgba(232, 225, 212, 0.28);
+  --dk-grid: rgba(232, 225, 212, 0.055);
+  --dk-on-e9: #edeae2;
+}
+
+html[data-theme="dark"] body.dk-lock {
+  --rail-bg: color-mix(in srgb, #12110f 88%, #000);
+  --header-bg: color-mix(in srgb, #12110f 82%, transparent);
+  background: #12110f;
+}
+
+html[data-theme="dark"] body.dk-lock .wm-ink {
+  fill: #e8e1d4 !important;
+}
+
+/* ---- deck sheet ------------------------------------------------ */
+
+.dk {
   position: relative;
   min-height: calc(100dvh - var(--header));
   overflow: hidden;
@@ -117,12 +140,17 @@ html body.dk-lock .wm-ink {
   display: none;
 }
 
+html[data-theme="dark"] .dk-grain {
+  mix-blend-mode: overlay;
+  opacity: 0.28;
+}
+
 /* soft vignette so the sheet feels lit from the center */
 .dk-scan {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(130% 105% at 50% 42%, transparent 62%, rgba(36, 39, 45, 0.1));
+  background: radial-gradient(130% 105% at 50% 42%, transparent 62%, color-mix(in srgb, var(--paper) 10%, transparent));
   display: none;
 }
 
@@ -168,7 +196,7 @@ html body.dk-lock .wm-ink {
   width: 8px;
   background: repeating-linear-gradient(
     to bottom,
-    rgba(36, 39, 45, 0.4) 0 1px,
+    color-mix(in srgb, var(--paper) 40%, transparent) 0 1px,
     transparent 1px 11px
   );
   -webkit-mask: linear-gradient(90deg, #000 0 5px, transparent 5px);
@@ -183,7 +211,7 @@ html body.dk-lock .wm-ink {
   right: 0;
   height: 2px;
   z-index: 40;
-  background: rgba(36, 39, 45, 0.1);
+  background: color-mix(in srgb, var(--paper) 10%, transparent);
   display: none;
 }
 
@@ -375,7 +403,7 @@ html[lang="ko"] .dk-body {
   line-height: 1;
   letter-spacing: -0.05em;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(36, 39, 45, 0.22);
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--paper) 22%, transparent);
   margin: 0;
   pointer-events: none;
   user-select: none;
@@ -496,7 +524,7 @@ html[lang="ko"] .dk-body {
   align-items: center;
   gap: 0.5rem;
   border: 1px solid var(--rule-strong);
-  background: rgba(237, 234, 226, 0.7);
+  background: color-mix(in srgb, var(--ink) 70%, transparent);
   color: var(--paper);
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -522,7 +550,7 @@ html[lang="ko"] .dk-body {
 .dk-exit:hover {
   background: var(--e9);
   border-color: var(--e9);
-  color: #edeae2;
+  color: var(--dk-on-e9, #edeae2);
 }
 
 .dk-play:focus-visible,
@@ -583,7 +611,7 @@ html[lang="ko"] .dk-body {
   width: 0.55rem;
   height: 0.55rem;
   flex: none;
-  border: 1.5px solid rgba(36, 39, 45, 0.55);
+  border: 1.5px solid color-mix(in srgb, var(--paper) 55%, transparent);
   opacity: 0.55;
 }
 

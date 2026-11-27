@@ -32,8 +32,7 @@ function rgba(color: string, a: number): string {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
-/* palette is read from the deck element: .dk carries its own
-   paper palette regardless of the site theme */
+/* palette is read from the deck element, which follows html[data-theme] */
 function readPalette(el: HTMLElement): Palette {
   const s = getComputedStyle(el);
   return {
@@ -157,13 +156,46 @@ function hbar(
   ctx.fillRect(x + 1, y + 1, (bw - 2) * clamp01(frac), 3);
 }
 
+type Ptr = { x: number; y: number; px: number; py: number };
+
+function react(x: number, y: number, ptr: Ptr, radius = 150, strength = 18, attract = false): [number, number] {
+  const dx = x - ptr.px;
+  const dy = y - ptr.py;
+  const d = Math.hypot(dx, dy) || 1;
+  if (d > radius) return [x, y];
+  const k = (1 - d / radius) * (1 - d / radius) * strength * (attract ? -1 : 1);
+  return [x + (dx / d) * k, y + (dy / d) * k];
+}
+
+function motes(
+  ctx: CanvasRenderingContext2D,
+  pal: Palette,
+  w: number,
+  h: number,
+  t: number,
+  ptr: Ptr,
+  count: number,
+  accent: string,
+  attract = false,
+) {
+  const n = Math.min(count, 72);
+  for (let i = 0; i < n; i++) {
+    const u = (hash(i * 17.3) + t * (0.018 + hash(i * 9.1) * 0.028)) % 1;
+    const v = (hash(i * 23.9) + t * (0.01 + hash(i * 5.7) * 0.02)) % 1;
+    const [x, y] = react(u * w, v * h, ptr, 170, 20, attract);
+    const a = 0.1 + hash(i * 11) * 0.22;
+    const s = 1.1 + hash(i * 3) * 1.7;
+    sq(ctx, x, y, s, hash(i * 41) > 0.82 ? accent : pal.paper, a);
+  }
+}
+
 /* ============================================================
    01 NETWORK DEFENSE — sentry dial
    监测: the sweep patrols. 狩猎: contacts surface faster.
    闭环: the needle intercepts contacts, they die teal.
    沉淀: interceptions stay as permanent teal marks on the ring.
    ============================================================ */
-function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette) {
+function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
   const hunt = A(acts, 1);
   const closure = A(acts, 2);
   const settle = A(acts, 3);
@@ -348,8 +380,13 @@ function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
     const bearing = hash(slot * 3 + i * 17) * TAU;
     const dist = R * (0.2 + hash(slot * 11 + i) * 0.7);
     const age = (t / period + i * 2.13) % 1;
-    const x = cx + Math.cos(bearing) * dist;
-    const y = cy + Math.sin(bearing) * dist;
+    const [x, y] = react(
+      cx + Math.cos(bearing) * dist,
+      cy + Math.sin(bearing) * dist,
+      ptr,
+      130,
+      16,
+    );
     /* has the needle swept past this contact? then it gets intercepted */
     const needleDelta = (sweep - bearing) % TAU;
     const passed = needleDelta > 0 && needleDelta < 1.2 ? closure : 0;
@@ -382,6 +419,19 @@ function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
   ring(ctx, cx, cy, 12 + Math.sin(t * 2) * 1.5, pal.e9, 0.35);
   label(ctx, pal, cx + 20, cy + 22, 'CORE', 0.5);
 
+  /* circulating ASSET / TRAFFIC / LOG / ALERT tokens */
+  const tokens = ['ASSET', 'TRAFFIC', 'LOG', 'ALERT'];
+  tokens.forEach((name, i) => {
+    const a = t * 0.22 + (i * TAU) / 4;
+    let x = cx + Math.cos(a) * R * 0.58;
+    let y = cy + Math.sin(a) * R * 0.58;
+    [x, y] = react(x, y, ptr, 140, 14);
+    const on = Math.floor((t * 0.35 + hunt) % 4) === i;
+    chip(ctx, pal, x - 16, y - 2, name, on ? 0.9 : 0.45, on ? pal.e9 : undefined);
+    ring(ctx, x, y, 11 + (on ? Math.sin(t * 4) * 2 : 0), on ? pal.e9 : pal.paper, on ? 0.55 : 0.2);
+  });
+  motes(ctx, pal, w, h, t, ptr, 36, pal.e9, false);
+
   ctx.restore();
 }
 
@@ -392,7 +442,7 @@ function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
    evidence gets ringed, a red polyline reconnects the path to its
    ROOT. 恢复: the zone turns CLEAN and a rule lane is written.
    ============================================================ */
-function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette) {
+function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
   /* PDCERF: 检测 → 抑制 → 取证根除 → 恢复跟进 */
   const detect = A(acts, 0);
   const contain = A(acts, 1);
@@ -623,6 +673,24 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     ctx.stroke();
   }
 
+  /* evidence fragments drift toward the playhead */
+  for (let i = 0; i < 10; i++) {
+    const u = (hash(i * 19.3) + t * (0.06 + hash(i) * 0.04)) % 1;
+    let x = lerp(w * 0.08, px, u);
+    let y = top + 20 + hash(i * 7.1) * (bot - top - 40);
+    [x, y] = react(x, y, ptr, 120, 12, true);
+    const a = (0.25 + forensics * 0.55) * (1 - Math.abs(u - 0.7) * 0.6);
+    const tags = ['HASH', 'TS', 'LOG', 'PCAP', 'MEM', 'REG'];
+    sq(ctx, x, y, 3, i % 3 === 0 ? pal.e9 : pal.paper, a);
+    if (i < 4 && forensics > 0.2) label(ctx, pal, x + 7, y + 3, tags[i], a * 0.9, pal.paper);
+  }
+  if (ptr.px > 0 && ptr.py > top && ptr.py < bot) {
+    ctx.strokeStyle = rgba(pal.ph, 0.35);
+    ctx.lineWidth = 1;
+    ctx.strokeRect(ptr.px - 18, ptr.py - 12, 36, 24);
+  }
+  motes(ctx, pal, w, h, t, ptr, 28, pal.e9, true);
+
   ctx.restore();
 }
 
@@ -702,7 +770,7 @@ function drawIsoBox(
   }
 }
 
-function ambientCorridor(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette) {
+function ambientCorridor(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
   const scope = A(acts, 0);
   const recon = A(acts, 1);
   const mapping = A(acts, 2);
@@ -941,6 +1009,21 @@ function ambientCorridor(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     });
   }
 
+  motes(ctx, pal, w, h, t, ptr, 32, pal.e9, false);
+  if (scope > 0.3) {
+    for (let i = 0; i < 6; i++) {
+      const a = t * 0.4 + i * 1.05;
+      const [x, y] = react(
+        w * 0.62 + Math.cos(a) * 90,
+        h * 0.5 + Math.sin(a * 0.8) * 50,
+        ptr,
+        140,
+        10,
+      );
+      ring(ctx, x, y, 8 + (i % 3) * 4, pal.paper, 0.12 + scope * 0.12);
+    }
+  }
+
   ctx.restore();
 }
 
@@ -950,7 +1033,7 @@ function ambientCorridor(ctx: CanvasRenderingContext2D, w: number, h: number, t:
    the weak signals worth keeping get circled. 分析: markers
    cross-link. 分发: verified intel gets boxed and filed.
    ============================================================ */
-function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette) {
+function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
   const collect = A(acts, 0);
   const process = A(acts, 1);
   const verify = A(acts, 2);
@@ -1125,6 +1208,25 @@ function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: 
   ring(ctx, cx, cy, 5, pal.paper, 0.6);
   label(ctx, pal, cx + 18, cy + 20, 'COLLECTION', 0.5);
 
+  const streakN = 14 + Math.round(collect * 8);
+  for (let i = 0; i < streakN; i++) {
+    const u = (hash(i * 8.3) + t * (0.08 + hash(i * 2) * 0.06)) % 1;
+    const a = hash(i * 15.1) * TAU;
+    const r0 = R * 0.48;
+    let x = cx + Math.cos(a + tilt) * r0 * (1 - u);
+    let y = cy + Math.sin(a + tilt) * r0 * 0.36 * (1 - u);
+    [x, y] = react(x, y, ptr, 160, 14, true);
+    const col = hash(i * 21) > 0.7 ? pal.ph : pal.e9;
+    ctx.strokeStyle = rgba(col, (0.2 + collect * 0.45) * (1 - u));
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x - Math.cos(a) * 12, y - Math.sin(a) * 5);
+    ctx.stroke();
+    sq(ctx, x, y, 2.2, col, 0.35 + (1 - u) * 0.4);
+  }
+  motes(ctx, pal, w, h, t, ptr, 40, pal.e9, true);
+
   ctx.restore();
 }
 
@@ -1136,7 +1238,7 @@ function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: 
    输出: montage leads light up, command ticks emit — inside a
    dashed teal boundary: software simulation only.
    ============================================================ */
-function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette) {
+function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
   const acquire = A(acts, 0);
   const output = A(acts, 3);
   /* the chain is cumulative: once filtered the signal stays clean,
@@ -1250,8 +1352,7 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     const a = (i / n) * TAU + t * 0.07;
     const lit = output > 0.05 && i === litSeq ? 1 : 0;
     const on = 0.5 + 0.5 * Math.sin(t * 1.6 + i * 1.3);
-    const x = mx + Math.cos(a) * mr;
-    const y = my + Math.sin(a) * mr;
+    const [x, y] = react(mx + Math.cos(a) * mr, my + Math.sin(a) * mr, ptr, 110, 8);
     ctx.fillStyle = rgba(lit ? pal.e9 : i === 3 ? pal.e9 : pal.paper, 0.3 + on * 0.4 + lit * 0.4);
     ctx.beginPath();
     ctx.arc(x, y, 2.2 + lit * 1.4, 0, TAU);
@@ -1311,6 +1412,9 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     label(ctx, pal, mx + mr + 14, my + mr + 34, 'CMD OUT', 0.7 * output, pal.ph);
   }
 
+  if (w > 1000) chip(ctx, pal, mx - 28, my - mr - 16, 'SOFTWARE ONLY', 0.55, pal.ph);
+  motes(ctx, pal, w, h, t, ptr, 24, pal.ph, false);
+
   ctx.restore();
 }
 
@@ -1321,7 +1425,7 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
    hold, anti-cheat sweeps, the scoreboard runs. 复盘: taken
    cells stay filed in teal with writeups published.
    ============================================================ */
-function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette) {
+function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
   const hosting = A(acts, 0);
   const challenges = A(acts, 1);
   const env = A(acts, 2);
@@ -1481,6 +1585,19 @@ function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: n
   label(ctx, pal, cx - 30, cy + N * s + 26, review > 0.4 ? 'ARENA / REVIEW' : 'ARENA / LIVE', 0.55, review > 0.4 ? pal.ph : undefined);
   if (review > 0.3)
     label(ctx, pal, cx - 30, cy + N * s + 44, 'SOLVES 312 \u00b7 TEAMS 86 \u00b7 24 CHALLENGES OPEN-SOURCED', review * 0.65, pal.ph);
+
+  /* contest sparks near solved / glowing cells */
+  for (let i = 0; i < 16; i++) {
+    const burst = (t * 0.7 + hash(i * 13.3)) % 1;
+    const ang = hash(i * 4.7) * TAU;
+    const rad = 20 + burst * 80;
+    let x = cx + Math.cos(ang) * rad;
+    let y = cy + Math.sin(ang) * rad * 0.55 - burst * 18;
+    [x, y] = react(x, y, ptr, 120, 10);
+    const a = (1 - burst) * (0.25 + challenges * 0.5);
+    sq(ctx, x, y, 2 + (1 - burst) * 2, i % 4 === 0 ? pal.e9 : pal.ph, a);
+  }
+  motes(ctx, pal, w, h, t, ptr, 30, pal.e9, false);
 
   ctx.restore();
 }
@@ -1692,8 +1809,13 @@ export function initShowcase() {
   };
 
   const onPointer = (ev: PointerEvent) => {
+    if (ev.pointerType === 'touch') return;
     mx = (ev.clientX / window.innerWidth) * 2 - 1;
     my = (ev.clientY / window.innerHeight) * 2 - 1;
+  };
+  const onPointerLeave = () => {
+    mx = 0;
+    my = 0;
   };
 
   const syncPlay = () => {
@@ -1726,7 +1848,7 @@ export function initShowcase() {
   const themeObs = new MutationObserver(() => {
     pal = readPalette(root);
   });
-  themeObs.observe(root, { attributes: true, attributeFilter: ['class'] });
+  themeObs.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   const ro = new ResizeObserver(resize);
   ro.observe(bg);
@@ -1767,32 +1889,51 @@ export function initShowcase() {
     const sp = pos - (firstStage - 0.5);
     const acts: Acts = stageIdxs.map((_, k) => clamp01(1 - Math.abs(sp - (k + 0.5)) * 1.5));
 
+    if (document.hidden) {
+      last = now;
+      raf = requestAnimationFrame(frame);
+      return;
+    }
+
+    pal = readPalette(root);
+
     const ctx = bg.getContext('2d');
     if (ctx) {
       const rec = bg.getBoundingClientRect();
       const w = rec.width;
       const h = rec.height;
+      const ox = smx * 18;
+      const oy = smy * 12;
+      const ptr: Ptr = {
+        x: smx,
+        y: smy,
+        px: (smx * 0.5 + 0.5) * w - ox,
+        py: (smy * 0.5 + 0.5) * h - oy,
+      };
       ctx.clearRect(0, 0, w, h);
+      ctx.save();
+      ctx.translate(ox, oy);
       switch (mode) {
         case 'loop':
-          ambientLoop(ctx, w, h, time, acts, pal);
+          ambientLoop(ctx, w, h, time, acts, pal, ptr);
           break;
         case 'timeline':
-          ambientTimeline(ctx, w, h, time, acts, pal);
+          ambientTimeline(ctx, w, h, time, acts, pal, ptr);
           break;
         case 'corridor':
-          ambientCorridor(ctx, w, h, time, acts, pal);
+          ambientCorridor(ctx, w, h, time, acts, pal, ptr);
           break;
         case 'signals':
-          ambientSignals(ctx, w, h, time, acts, pal);
+          ambientSignals(ctx, w, h, time, acts, pal, ptr);
           break;
         case 'protocol':
-          ambientProtocol(ctx, w, h, time, acts, pal);
+          ambientProtocol(ctx, w, h, time, acts, pal, ptr);
           break;
         case 'ground':
-          ambientGround(ctx, w, h, time, acts, pal);
+          ambientGround(ctx, w, h, time, acts, pal, ptr);
           break;
       }
+      ctx.restore();
     }
 
     layout();
@@ -1804,6 +1945,7 @@ export function initShowcase() {
   window.addEventListener('touchmove', onTouchMove, { passive: false });
   window.addEventListener('keydown', onKey);
   window.addEventListener('pointermove', onPointer, { passive: true });
+  window.addEventListener('pointerleave', onPointerLeave);
   playBtn?.addEventListener('click', onPlay);
   root.querySelector('[data-rail]')?.addEventListener('click', onRail);
 
@@ -1822,6 +1964,7 @@ export function initShowcase() {
     window.removeEventListener('touchmove', onTouchMove);
     window.removeEventListener('keydown', onKey);
     window.removeEventListener('pointermove', onPointer);
+    window.removeEventListener('pointerleave', onPointerLeave);
     root.classList.remove('is-live-deck');
     document.body.classList.remove('dk-lock');
     root.dataset.bound = '0';
