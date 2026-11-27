@@ -15,6 +15,7 @@ interface Props {
   description?: string;
   route?: string;
   article?: boolean;
+  serviceHero?: boolean;
 }
 
 const {
@@ -23,6 +24,7 @@ const {
   description,
   route = '/HOME',
   article = false,
+  serviceHero = false,
 } = Astro.props;
 
 const copy = t(locale);
@@ -77,7 +79,7 @@ const rssHref = localizeHref(locale, '/rss.xml');
     />
     <ClientRouter />
   </head>
-  <body class:list={[{ 'is-article': article }]}>
+  <body class:list={[{ 'is-article': article, 'is-service-hero': serviceHero }]}>
     <a class="skip" href="#main">{copy.skip}</a>
     <ByteField />
     <div class="app">

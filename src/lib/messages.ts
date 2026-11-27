@@ -71,9 +71,6 @@ const zh = {
       '',
     contactUs: '联系我们',
     existingSite: '已有官网',
-    showcaseCta: '动画展示',
-    visionCta: '智能爆炸',
-    visionBack: '返回业务',
     items: [
       {
         "no": "01",
@@ -263,9 +260,6 @@ const en = {
     intro: '',
     contactUs: 'Contact us',
     existingSite: 'Existing official site',
-    showcaseCta: 'Animated showcase',
-    visionCta: 'Intelligence explosion',
-    visionBack: 'Back to services',
     items: [
       {
         no: '01',
@@ -451,9 +445,6 @@ const ko = {
     intro: '',
     contactUs: '연락하기',
     existingSite: '기존 공식 사이트',
-    showcaseCta: '애니메이션 전시',
-    visionCta: '지능 폭발',
-    visionBack: '업무로 돌아가기',
     items: [
       {
         no: '01',

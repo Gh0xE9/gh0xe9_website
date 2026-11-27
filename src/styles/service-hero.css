@@ -1,0 +1,251 @@
+/* Service detail: Apple-like scroll hero. Minimal, large, precise. */
+
+body.is-service-hero .bytefield {
+  opacity: 0.1;
+}
+
+body.is-service-hero .site-header {
+  background: color-mix(in srgb, var(--header-bg) 42%, transparent);
+  border-bottom-color: transparent;
+}
+
+body.is-service-hero .site-footer {
+  border-top: 1px solid var(--rule);
+}
+
+.sh {
+  position: relative;
+}
+
+.sh-hero {
+  position: relative;
+  min-height: calc(100dvh - var(--header));
+  display: grid;
+  align-content: end;
+  padding: 8vh var(--pad) 12vh;
+  overflow: hidden;
+}
+
+.sh-hero__no {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(7rem, 22vw, 16rem);
+  line-height: 0.75;
+  letter-spacing: -0.07em;
+  color: color-mix(in srgb, var(--paper) 10%, transparent);
+  position: absolute;
+  right: var(--pad);
+  top: 8vh;
+  margin: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sh-hero h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(3.2rem, 9vw, 8rem);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  margin: 0 0 0.6rem;
+  max-width: 12ch;
+  position: relative;
+}
+
+html[lang="zh-Hans"] .sh-hero h1,
+html[lang="ko"] .sh-hero h1 {
+  letter-spacing: 0;
+  max-width: 8em;
+}
+
+.sh-hero__sub {
+  font-family: var(--font-mono);
+  font-size: clamp(0.72rem, 1.3vw, 0.9rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fog);
+  margin: 0 0 2.5rem;
+}
+
+.sh-hero__rule {
+  width: min(28rem, 70vw);
+  height: 1px;
+  background: var(--e9);
+  transform-origin: left center;
+  transform: scaleX(0.18);
+}
+
+@supports (animation-timeline: scroll()) {
+  .sh-hero__rule {
+    animation: sh-rule linear both;
+    animation-timeline: scroll(root);
+    animation-range: 0 28vh;
+  }
+}
+
+@keyframes sh-rule {
+  from { transform: scaleX(0.18); }
+  to { transform: scaleX(1); }
+}
+
+.sh-pin {
+  position: relative;
+  height: 320vh;
+}
+
+.sh-pin__sticky {
+  position: sticky;
+  top: var(--header);
+  height: calc(100dvh - var(--header));
+  overflow: hidden;
+}
+
+.sh-pin__stage {
+  position: absolute;
+  inset: 0;
+}
+
+.sh-pin__stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sh-pin__copy {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 var(--pad) 8vh;
+  max-width: 46rem;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.sh-pin__copy::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 70%;
+  background: linear-gradient(to top, color-mix(in srgb, var(--ink) 82%, transparent), transparent);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.sh-beat {
+  margin: 0;
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  line-height: 1.45;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  position: absolute;
+  left: var(--pad);
+  right: var(--pad);
+  bottom: 8vh;
+  max-width: 38rem;
+  opacity: 0;
+  text-wrap: pretty;
+}
+
+html[lang="zh-Hans"] .sh-beat,
+html[lang="ko"] .sh-beat {
+  letter-spacing: 0;
+  text-align: justify;
+  text-justify: inter-ideograph;
+}
+
+.sh-beat.is-on {
+  opacity: 1;
+}
+
+.sh-read {
+  padding: 18vh var(--pad) 8vh;
+  max-width: 42rem;
+}
+
+.sh-read p {
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+  line-height: 1.8;
+  color: var(--paper-2);
+  margin: 0;
+  text-wrap: pretty;
+}
+
+html[lang="zh-Hans"] .sh-read p,
+html[lang="ko"] .sh-read p {
+  text-align: justify;
+  text-justify: inter-ideograph;
+}
+
+.sh-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0 var(--pad) 6vh;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fog);
+  text-decoration: none;
+}
+
+.sh-back:hover {
+  color: var(--paper);
+  text-decoration: none;
+}
+
+/* reduced motion: no theater, still a designed long page */
+@media (prefers-reduced-motion: reduce) {
+  .sh-hero__rule {
+    transform: none;
+    animation: none;
+  }
+
+  .sh-pin {
+    height: auto;
+  }
+
+  .sh-pin__sticky {
+    position: relative;
+    top: 0;
+    height: auto;
+    min-height: 0;
+    padding: 10vh var(--pad) 8vh;
+  }
+
+  .sh-pin__stage {
+    display: none;
+  }
+
+  .sh-pin__copy,
+  .sh-beat {
+    position: static;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    opacity: 1;
+    max-width: 42rem;
+  }
+
+  .sh-pin__copy::before {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .sh-hero {
+    align-content: center;
+    padding-bottom: 8vh;
+  }
+
+  .sh-hero__no {
+    font-size: clamp(5rem, 34vw, 9rem);
+    top: 4vh;
+    right: 0.4rem;
+  }
+
+  .sh-beat {
+    font-size: 1.15rem;
+  }
+}

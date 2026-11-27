@@ -772,21 +772,6 @@ html[lang="ko"] .index-list .name {
   max-width: 36rem;
 }
 
-.index-list .service-links {
-  margin-top: 0.7rem;
-}
-
-.index-list .service-links a {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--e9);
-}
-
-.index-list .service-links a:hover {
-  color: var(--paper);
-}
 
 .index-list a.row:hover .name,
 .index-list a.row:hover h3 {

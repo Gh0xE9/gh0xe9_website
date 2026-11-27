@@ -1,6 +1,6 @@
 ---
-import ServiceVision from '../../../views/ServiceVision.astro';
-import { serviceNos, type ServiceNo } from '../../../lib/visions';
+import ServiceHero from '../../../views/ServiceHero.astro';
+import { serviceNos, type ServiceNo } from '../../../lib/service-scenes';
 
 export function getStaticPaths() {
   return serviceNos.map((no) => ({ params: { no } }));
@@ -9,4 +9,4 @@ export function getStaticPaths() {
 const { no } = Astro.params;
 ---
 
-<ServiceVision locale="en" no={no as ServiceNo} />
+<ServiceHero locale="en" no={no as ServiceNo} />

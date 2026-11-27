@@ -1,0 +1,68 @@
+---
+import Base from '../layouts/Base.astro';
+import { localizeHref, type Locale } from '../lib/i18n';
+import { t } from '../lib/messages';
+import { getServiceScene, type ServiceNo } from '../lib/service-scenes';
+import '../styles/service-hero.css';
+
+interface Props {
+  locale: Locale;
+  no: ServiceNo;
+}
+
+const { locale, no } = Astro.props;
+const copy = t(locale);
+const service = copy.services.items.find((item) => item.no === no);
+const scene = getServiceScene(locale, no);
+
+if (!service || !scene) {
+  throw new Error(`Unknown service ${no}`);
+}
+---
+
+<Base
+  locale={locale}
+  title={service.title}
+  description={service.body}
+  route={`/SERVICES/${no}`}
+  serviceHero
+>
+  <article class="sh" data-service-field data-mode={scene.mode} data-labels={scene.labels.join(',')}>
+    <header class="sh-hero">
+      <p class="sh-hero__no" aria-hidden="true">{service.no}</p>
+      <h1>{service.title}</h1>
+      <p class="sh-hero__sub">{service.sub}</p>
+      <div class="sh-hero__rule" aria-hidden="true"></div>
+    </header>
+
+    <section class="sh-pin" data-pin>
+      <div class="sh-pin__sticky">
+        <div class="sh-pin__stage">
+          <canvas></canvas>
+        </div>
+        <div class="sh-pin__copy">
+          {
+            scene.beats.map((beat, i) => (
+              <p class:list={['sh-beat', { 'is-on': i === 0 }]} data-beat={i}>
+                {beat}
+              </p>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="sh-read">
+      <p>{service.body}</p>
+    </section>
+
+    <a class="sh-back" href={localizeHref(locale, '/services/')}>← {copy.services.title}</a>
+  </article>
+</Base>
+
+<script>
+  import { bindServiceField } from '../lib/service-field';
+
+  bindServiceField();
+  document.addEventListener('astro:page-load', bindServiceField);
+</script>
