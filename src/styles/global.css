@@ -1625,8 +1625,27 @@ body.is-article .bytefield {
   display: block;
   height: 2rem;
   width: calc(2rem * 600 / 113);
-  margin: 0.85rem 0 1rem;
+  margin: 0 0 1rem;
 }
+
+/* ---- pictorial eagle mark ---- */
+
+.eagle {
+  display: block;
+  width: auto;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.eagle--header {
+  height: 1.85rem;
+}
+
+.eagle--about {
+  height: 5.25rem;
+  margin: 0.7rem 0 0.85rem;
+}
+
 
 .wm-ink { fill: #001028; }
 .wm-e9 { fill: #f80010; }

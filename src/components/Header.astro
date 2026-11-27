@@ -1,6 +1,7 @@
 ---
 import { navItems, site } from '../lib/site';
 import Wordmark from './Wordmark.astro';
+import EagleMark from './EagleMark.astro';
 import { localeMeta, locales, localizeHref, pathWithoutLocale, type Locale } from '../lib/i18n';
 import { t } from '../lib/messages';
 
@@ -20,6 +21,7 @@ function isCurrent(path: string) {
 
 <header class="site-header">
   <a class="wordmark" href={localizeHref(locale, '/')} aria-label={`${site.name}, ${site.tagline}`}>
+    <EagleMark class="eagle--header" />
     <Wordmark class="wm--header" glitch />
     <span class="wordmark__tag">{site.tagline}</span>
   </a>

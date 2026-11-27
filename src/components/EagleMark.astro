@@ -1,0 +1,16 @@
+---
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<img
+  class:list={['eagle', className]}
+  src="/brand/gh0xe9-eagle.png"
+  width="458"
+  height="512"
+  alt=""
+  decoding="async"
+/>
