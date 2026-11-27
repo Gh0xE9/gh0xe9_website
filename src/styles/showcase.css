@@ -382,7 +382,7 @@ html[lang="ko"] .dk-body {
   color: var(--paper-dim);
   border: 1px solid var(--rule-strong);
   padding: 0.34rem 0.7rem;
-  margin: -0.4rem 0 1.5rem;
+  margin: 0.15rem 0 1.5rem;
 }
 
 .dk-addr::before {
@@ -650,6 +650,8 @@ html[lang="ko"] .dk-body {
   text-transform: uppercase;
   color: var(--paper-dim);
   margin: 0;
+  padding: 0.28rem 0.7rem;
+  background: color-mix(in srgb, var(--ink) 78%, transparent);
   transition: opacity 0.4s ease;
 }
 
@@ -883,7 +885,7 @@ html[lang="ko"] .dk-body {
 
 @media (max-width: 860px) {
   .dk-scene__inner {
-    padding-right: calc(var(--pad) + 2.2rem);
+    padding-right: calc(var(--pad) + 2.8rem);
   }
 
   .dk-frame {
@@ -896,6 +898,16 @@ html[lang="ko"] .dk-body {
 
   .dk-rail {
     gap: 0.7rem;
+  }
+
+  .dk-rail button {
+    padding: 0.3rem 0.12rem 0.3rem 0.7rem;
+  }
+
+  html[lang="zh-Hans"] .dk-title,
+  html[lang="ko"] .dk-title {
+    word-break: normal;
+    overflow-wrap: anywhere;
   }
 
   .dk-no {

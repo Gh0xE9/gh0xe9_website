@@ -189,20 +189,105 @@ function motes(
   }
 }
 
+
+type Safe = {
+  l: number;
+  r: number;
+  t: number;
+  b: number;
+  textR: number;
+  textT: number;
+  textB: number;
+  narrow: boolean;
+};
+
+/** typography / chrome insets, measured from the live scene when possible */
+function measureSafe(root: HTMLElement, canvas: HTMLElement, w: number, h: number): Safe {
+  const narrow = w < 720;
+  const l = narrow ? 16 : 28;
+  const r = narrow ? 48 : 168;
+  const t = 80;
+  const b = narrow ? 64 : 104;
+  let textR = Math.min(w * (narrow ? 0.9 : 0.5), narrow ? Math.max(l + 80, w - r) : 760);
+  let textT = h * 0.22;
+  let textB = h * 0.78;
+  const inner = root.querySelector('.dk-scene.is-live .dk-scene__inner') as HTMLElement | null;
+  if (inner) {
+    const cr = canvas.getBoundingClientRect();
+    const ir = inner.getBoundingClientRect();
+    textR = Math.min(w - 8, Math.max(l + 80, ir.right - cr.left + 18));
+    textT = Math.max(36, ir.top - cr.top - 14);
+    textB = Math.min(h - b, ir.bottom - cr.top + 14);
+  }
+  return { l, r, t, b, textR, textT, textB, narrow };
+}
+
+function hitsText(s: Safe, x: number, y: number, pad = 8): boolean {
+  return x < s.textR + pad && y > s.textT - pad && y < s.textB + pad;
+}
+
+/** fade scene ink under typography, the scroll hint, and the right rail */
+function typographyVeil(ctx: CanvasRenderingContext2D, w: number, h: number, pal: Palette, s: Safe) {
+  ctx.save();
+  const x1 = s.textR;
+  const y0 = s.textT;
+  const y1 = s.textB;
+  const g = ctx.createLinearGradient(0, 0, x1, 0);
+  g.addColorStop(0, rgba(pal.ink, 0.95));
+  g.addColorStop(0.66, rgba(pal.ink, 0.9));
+  g.addColorStop(0.88, rgba(pal.ink, 0.4));
+  g.addColorStop(1, rgba(pal.ink, 0));
+  ctx.fillStyle = g;
+  ctx.fillRect(0, y0, x1, Math.max(0, y1 - y0));
+
+  /* soft vertical edges so the veil doesn't read as a hard slab */
+  const fade = 28;
+  const gt = ctx.createLinearGradient(0, y0, 0, y0 + fade);
+  gt.addColorStop(0, rgba(pal.ink, 0));
+  gt.addColorStop(1, rgba(pal.ink, 0.55));
+  ctx.fillStyle = gt;
+  ctx.fillRect(0, y0, x1, fade);
+  const gb = ctx.createLinearGradient(0, y1 - fade, 0, y1);
+  gb.addColorStop(0, rgba(pal.ink, 0.55));
+  gb.addColorStop(1, rgba(pal.ink, 0));
+  ctx.fillStyle = gb;
+  ctx.fillRect(0, y1 - fade, x1, fade);
+
+  const botH = s.b + 12;
+  const bg = ctx.createLinearGradient(0, h - botH - 40, 0, h);
+  bg.addColorStop(0, rgba(pal.ink, 0));
+  bg.addColorStop(0.4, rgba(pal.ink, 0.55));
+  bg.addColorStop(1, rgba(pal.ink, 0.92));
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, h - botH - 40, w, botH + 40);
+
+  const railW = s.r;
+  const rg = ctx.createLinearGradient(w - railW - 28, 0, w, 0);
+  rg.addColorStop(0, rgba(pal.ink, 0));
+  rg.addColorStop(0.4, rgba(pal.ink, 0.28));
+  rg.addColorStop(1, rgba(pal.ink, 0.78));
+  ctx.fillStyle = rg;
+  ctx.fillRect(w - railW - 28, 0, railW + 28, h);
+  ctx.restore();
+}
+
 /* ============================================================
    01 NETWORK DEFENSE — sentry dial
    监测: the sweep patrols. 狩猎: contacts surface faster.
    闭环: the needle intercepts contacts, they die teal.
    沉淀: interceptions stay as permanent teal marks on the ring.
    ============================================================ */
-function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
+function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr, safe: Safe) {
   const hunt = A(acts, 1);
   const closure = A(acts, 2);
   const settle = A(acts, 3);
 
-  const cx = w * 0.635;
-  const cy = h * 0.52;
-  const R = Math.min(w, h) * 0.38;
+  const logH = w > 900 ? 78 : 0;
+  const topLimit = Math.max(safe.t, 86);
+  const bottomLimit = h - safe.b - logH;
+  const R = Math.min(w * 0.34, Math.max(90, (bottomLimit - topLimit) * 0.42));
+  const cx = Math.min(w * 0.635, w - safe.r - R - 52);
+  const cy = (topLimit + bottomLimit) / 2;
 
   ctx.save();
 
@@ -230,12 +315,12 @@ function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
     ctx.arc(cx, cy, R + 19, a0, a1);
     ctx.stroke();
     const mid = (a0 + a1) / 2;
-    label(
-      ctx, pal,
-      cx + Math.cos(mid) * (R + 36) - 8,
-      cy + Math.sin(mid) * (R + 36) + 3,
-      name, 0.5 + hot * 0.4, hot ? pal.e9 : undefined,
-    );
+    {
+      const lx = cx + Math.cos(mid) * (R + 36) - 8;
+      const ly = cy + Math.sin(mid) * (R + 36) + 3;
+      if (lx < w - safe.r - 8 && ly < h - safe.b)
+        label(ctx, pal, lx, ly, name, 0.5 + hot * 0.4, hot ? pal.e9 : undefined);
+    }
   });
   label(ctx, pal, cx - 4, cy - R - 16, 'N', 0.5);
 
@@ -289,7 +374,7 @@ function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
       ['CONTAIN', 'ws-fin-17 isolated', pal.ph],
     ];
     const fx0 = cx - R * 0.98;
-    const fy0 = Math.min(h - 70, cy + R + 30);
+    const fy0 = Math.min(h - safe.b - 52, cy + R + 28);
     label(ctx, pal, fx0, fy0 - 8, 'EVENT LOG', 0.5);
     for (let i = 0; i < 3; i++) {
       const slot = Math.floor(t * 1.1) - i;
@@ -442,7 +527,7 @@ function ambientLoop(ctx: CanvasRenderingContext2D, w: number, h: number, t: num
    evidence gets ringed, a red polyline reconnects the path to its
    ROOT. 恢复: the zone turns CLEAN and a rule lane is written.
    ============================================================ */
-function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
+function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr, safe: Safe) {
   /* PDCERF: 检测 → 抑制 → 取证根除 → 恢复跟进 */
   const detect = A(acts, 0);
   const contain = A(acts, 1);
@@ -466,14 +551,14 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
   ctx.moveTo(0, top - 18);
   ctx.lineTo(w, top - 18);
   ctx.stroke();
-  for (let x = 0; x < w; x += 24) {
+  for (let x = 0; x < w - safe.r; x += 24) {
     const major = x % 120 === 0;
     ink(ctx, pal, major ? 0.5 : 0.24);
     ctx.beginPath();
     ctx.moveTo(x + 0.5, top - 18);
     ctx.lineTo(x + 0.5, top - 18 - (major ? 8 : 4));
     ctx.stroke();
-    if (major && w > 900 && x < w * 0.68)
+    if (major && w > 900 && x < w - safe.r - 80)
       label(ctx, pal, x + 4, top - 32, `T+${String((x / 120) * 15).padStart(3, '0')}M`, 0.4);
   }
 
@@ -501,9 +586,10 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     ink(ctx, pal, 0.14);
     ctx.beginPath();
     ctx.moveTo(0, y);
-    ctx.lineTo(w, y);
+    ctx.lineTo(w - safe.r, y);
     ctx.stroke();
-    label(ctx, pal, 8, y - 6, hostNames[l], 0.48);
+    if (!hitsText(safe, safe.l + 20, y - 6, 10))
+      label(ctx, pal, safe.l, y - 6, hostNames[l], 0.48);
 
     /* scrolling telemetry — glyph encodes the event type;
        检测: alerts burst near the head;
@@ -554,7 +640,8 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     calls.forEach(([lane, txt], k) => {
       const y = top + ((bot - top) * (lane + 0.5)) / lanes;
       const x = px - w * (0.1 + k * 0.06);
-      chip(ctx, pal, x - 96, y - 32, txt, detect * flash * 0.9, pal.e9);
+      if (!hitsText(safe, x - 40, y - 32, 8))
+        chip(ctx, pal, x - 96, y - 32, txt, detect * flash * 0.9, pal.e9);
       ctx.strokeStyle = rgba(pal.e9, detect * flash * 0.5);
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -592,7 +679,8 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     keyEvents.forEach(([x, y], i) => {
       ring(ctx, x, y, 5, pal.e9, forensics * 0.8, 1.4);
       const tag = evid[i] ?? '';
-      if (tag === 'ENTRY') label(ctx, pal, x - 12, y - 12, tag, forensics, pal.e9);
+      if (hitsText(safe, x, y, 16)) { /* keep the node, drop the tag under typography */ }
+      else if (tag === 'ENTRY') label(ctx, pal, x - 12, y - 12, tag, forensics, pal.e9);
       else if (tag === 'ROOT') label(ctx, pal, x - 12, y + 18, tag, forensics, pal.e9);
       else if (tag) label(ctx, pal, x - 10, y - 12, tag, forensics * 0.75, pal.e9);
     });
@@ -601,7 +689,7 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
   /* 恢复跟进: healed rule lane written below the chart */
   if (recover > 0.02) {
     const ry = bot + 26;
-    label(ctx, pal, 8, ry + 3, 'RULES', 0.75 * recover, pal.ph);
+    label(ctx, pal, safe.l, ry + 3, 'RULES', 0.75 * recover, pal.ph);
     const count = Math.floor(Math.min(56, t * 7) * recover);
     for (let i = 0; i < count; i++) {
       ctx.fillStyle = rgba(pal.ph, 0.7 * recover);
@@ -622,8 +710,8 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
       ['RECOVER', recover > 0.85 ? 2 : recover > 0.25 ? 1 : 0],
       ['FOLLOW-UP', recover > 0.6 ? 1 : 0],
     ];
-    const py = bot + 54;
-    const px0 = w * 0.07;
+    const py = Math.min(bot + 54, h - safe.b + 8);
+    const px0 = Math.max(w * 0.07, safe.l);
     const gap = Math.min(150, (w * 0.62) / 5);
     ink(ctx, pal, 0.25);
     ctx.beginPath();
@@ -641,7 +729,7 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
 
   /* playhead */
   ctx.fillStyle = rgba(pal.e9, 0.05 + detect * 0.05);
-  ctx.fillRect(px, top - 18, w - px, bot - top + 18);
+  ctx.fillRect(px, top - 18, Math.max(0, w - safe.r - px), bot - top + 18);
   ctx.strokeStyle = rgba(recover > 0.5 ? pal.ph : pal.e9, 0.85);
   ctx.lineWidth = 1.4;
   ctx.beginPath();
@@ -660,7 +748,7 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
   const bx = hash(slot * 3) * w * 0.5 + w * 0.06;
   const by = top + hash(slot * 9) * (bot - top);
   const age = (t % 5) / 5;
-  if (age < 0.7) {
+  if (age < 0.7 && !hitsText(safe, bx, by, 24) && bx < w - safe.r - 24 && by < h - safe.b) {
     const a = ((0.7 - age) / 0.7) * (0.5 + detect * 0.5);
     ctx.strokeStyle = rgba(pal.e9, a * 0.8);
     ctx.lineWidth = 1.2;
@@ -684,7 +772,13 @@ function ambientTimeline(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     sq(ctx, x, y, 3, i % 3 === 0 ? pal.e9 : pal.paper, a);
     if (i < 4 && forensics > 0.2) label(ctx, pal, x + 7, y + 3, tags[i], a * 0.9, pal.paper);
   }
-  if (ptr.px > 0 && ptr.py > top && ptr.py < bot) {
+  if (
+    ptr.px > safe.l &&
+    ptr.px < w - safe.r - 24 &&
+    ptr.py > top &&
+    ptr.py < Math.min(bot, h - safe.b) &&
+    !hitsText(safe, ptr.px, ptr.py, 24)
+  ) {
     ctx.strokeStyle = rgba(pal.ph, 0.35);
     ctx.lineWidth = 1;
     ctx.strokeRect(ptr.px - 18, ptr.py - 12, 36, 24);
@@ -770,7 +864,7 @@ function drawIsoBox(
   }
 }
 
-function ambientCorridor(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
+function ambientCorridor(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr, safe: Safe) {
   const scope = A(acts, 0);
   const recon = A(acts, 1);
   const mapping = A(acts, 2);
@@ -991,8 +1085,8 @@ function ambientCorridor(ctx: CanvasRenderingContext2D, w: number, h: number, t:
       ['LATERAL', lateral],
       ['REPORT', detect],
     ];
-    const cy2 = h - 46;
-    const cx0 = w * 0.3;
+    const cy2 = h - safe.b + 6;
+    const cx0 = Math.max(w * 0.3, safe.l);
     const gap = Math.min(120, (w * 0.5) / 4);
     ink(ctx, pal, 0.25);
     ctx.beginPath();
@@ -1033,20 +1127,20 @@ function ambientCorridor(ctx: CanvasRenderingContext2D, w: number, h: number, t:
    the weak signals worth keeping get circled. 分析: markers
    cross-link. 分发: verified intel gets boxed and filed.
    ============================================================ */
-function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
+function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr, safe: Safe) {
   const collect = A(acts, 0);
   const process = A(acts, 1);
   const verify = A(acts, 2);
   const decision = A(acts, 3);
 
-  const cx = w * 0.62;
-  const cy = h * 0.52;
-  const R = Math.min(w, h);
+  const cx = safe.narrow ? w * 0.58 : w * 0.64;
+  const cy = safe.narrow ? h * 0.62 : h * 0.52;
+  const R = Math.min(w, h) * (safe.narrow ? 0.72 : 1);
 
   ctx.save();
 
   const wash = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.5);
-  wash.addColorStop(0, rgba(pal.e9, 0.045));
+  wash.addColorStop(0, rgba(pal.e9, 0.08));
   wash.addColorStop(1, rgba(pal.e9, 0));
   ctx.fillStyle = wash;
   ctx.fillRect(cx - R * 0.6, cy - R * 0.6, R * 1.2, R * 1.2);
@@ -1057,7 +1151,7 @@ function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: 
     ctx.save();
     ctx.translate(cx, cy);
     ctx.rotate(tilt);
-    ctx.strokeStyle = rgba(pal.paper, 0.2 - i * 0.02);
+    ctx.strokeStyle = rgba(pal.paper, 0.42 - i * 0.05);
     ctx.lineWidth = 1;
     ctx.setLineDash(i % 2 ? [2, 6] : []);
     ctx.beginPath();
@@ -1089,7 +1183,7 @@ function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: 
     const size = (teal ? 2 : 1.6 + hash(i * 5) * 2) * (0.6 + depth * 0.6);
     /* 处理: noise dims out, kept weak signals stay bright */
     const noiseFade = 1 - process * (teal || kept ? 0 : 0.55);
-    sq(ctx, x, y, size, teal ? pal.ph : pal.e9, (teal ? 0.6 : 0.32 + depth * 0.5) * noiseFade);
+    sq(ctx, x, y, size, teal ? pal.ph : pal.e9, (teal ? 0.72 : 0.42 + depth * 0.5) * noiseFade);
     /* 处理: the weak signals worth keeping get circled and typed */
     if (process > 0.05 && kept) {
       ring(ctx, x, y, 4.5, pal.paper, process * 0.5);
@@ -1107,9 +1201,10 @@ function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: 
     const or = R * orbits[(i + 1) % orbits.length];
     const [x, y] = project(a, or);
     markers.push([x, y]);
-    ring(ctx, x, y, 6, pal.paper, 0.6, 1.2);
-    sq(ctx, x, y, 3, pal.paper, 0.85);
-    label(ctx, pal, x + 10, y - 8, `SIG-${['A', 'B', 'C', 'D'][i]}${i}`, 0.6);
+    ring(ctx, x, y, 6, pal.paper, 0.75, 1.3);
+    sq(ctx, x, y, 3, pal.paper, 0.95);
+    if (!hitsText(safe, x + 10, y - 8, 8) && x < w - safe.r - 20)
+      label(ctx, pal, x + 10, y - 8, `SIG-${['A', 'B', 'C', 'D'][i]}${i}`, 0.7);
     ink(ctx, pal, 0.16);
     ctx.beginPath();
     ctx.moveTo(x, y);
@@ -1176,9 +1271,9 @@ function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: 
   }
 
   /* pipeline funnel — what survives each stage of the lifecycle */
-  if (w > 900) {
-    const fy = h - 58;
-    const fx0 = w * 0.3;
+  if (w > 900 && !safe.narrow) {
+    const fy = h - safe.b + 10;
+    const fx0 = Math.max(w * 0.3, safe.l);
     const collected = Math.min(128, Math.floor(36 + t * 5 * (0.4 + collect)));
     const keptN = Math.floor(17 * process);
     const verN = Math.floor(4 * verify);
@@ -1238,7 +1333,7 @@ function ambientSignals(ctx: CanvasRenderingContext2D, w: number, h: number, t: 
    输出: montage leads light up, command ticks emit — inside a
    dashed teal boundary: software simulation only.
    ============================================================ */
-function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
+function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr, safe: Safe) {
   const acquire = A(acts, 0);
   const output = A(acts, 3);
   /* the chain is cumulative: once filtered the signal stays clean,
@@ -1249,8 +1344,15 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
   const chNames = ['Fp1', 'F3', 'C3', 'P3', 'O1'];
   const rows = 5;
   const top = h * 0.2;
-  const bot = h * 0.82;
-  const chartW = w * 0.72;
+  const bot = Math.min(h * 0.82, h - safe.b - 10);
+  const showMontage = !safe.narrow && w >= 860;
+  const mr = Math.min(w, h) * 0.1;
+  const mx = showMontage ? Math.min(w * 0.84, w - safe.r - mr - 24) : w + 280;
+  const my = h * 0.4;
+  const x0 = safe.l;
+  const chartW = showMontage
+    ? Math.max(220, Math.min(w * 0.72, mx - mr - 36) - x0)
+    : Math.max(160, w - safe.l - safe.r);
 
   ctx.save();
 
@@ -1260,35 +1362,38 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     ctx.lineWidth = 1.2;
     ctx.setLineDash([6, 5]);
     ctx.lineDashOffset = -t * 10;
-    ctx.strokeRect(-10 + (1 - output) * 30, top - 30, chartW + 20, bot - top + 46);
+    ctx.strokeRect(x0 - 6 + (1 - output) * 24, top - 30, chartW + 16, bot - top + 46);
     ctx.setLineDash([]);
-    label(ctx, pal, 8, top - 38, 'BOUNDARY — SOFTWARE SIMULATION ONLY', output, pal.ph);
+    if (!hitsText(safe, x0 + 8, top - 38, 4))
+      label(ctx, pal, x0 + 8, top - 38, 'BOUNDARY — SOFTWARE SIMULATION ONLY', output, pal.ph);
   }
 
   /* chart frame + ruler + acquisition parameters */
   ink(ctx, pal, 0.24);
-  ctx.strokeRect(0.5, top - 14.5, chartW, bot - top + 28);
+  ctx.strokeRect(x0 + 0.5, top - 14.5, chartW, bot - top + 28);
   for (let x = 0; x < chartW; x += 20) {
     const major = x % 100 === 0;
     ink(ctx, pal, major ? 0.4 + acquire * 0.2 : 0.18);
     ctx.beginPath();
-    ctx.moveTo(x + 0.5, top - 14);
-    ctx.lineTo(x + 0.5, top - 14 + (major ? 7 : 3.5));
+    ctx.moveTo(x0 + x + 0.5, top - 14);
+    ctx.lineTo(x0 + x + 0.5, top - 14 + (major ? 7 : 3.5));
     ctx.stroke();
-    if (major && w > 900) label(ctx, pal, x + 4, bot + 26, `T${x / 100}s`, 0.35);
+    if (major && w > 900 && !hitsText(safe, x0 + x + 4, bot + 26, 4))
+      label(ctx, pal, x0 + x + 4, bot + 26, `T${x / 100}s`, 0.35);
   }
-  if (w > 900) label(ctx, pal, chartW - 172, top - 22, '\u00b150\u00b5V \u00b7 fs 250Hz \u00b7 BP 0.5-45Hz', 0.5);
+  if (w > 900) label(ctx, pal, x0 + chartW - 172, top - 22, '\u00b150\u00b5V \u00b7 fs 250Hz \u00b7 BP 0.5-45Hz', 0.5);
 
   /* 预处理: a filter sweep line washes across the chart */
   if (preproc > 0.02 && preproc < 0.98) {
-    const fx = ((t * 0.35) % 1.2 - 0.1) * chartW;
+    const fx = x0 + ((t * 0.35) % 1.2 - 0.1) * chartW;
     ctx.strokeStyle = rgba(pal.ph, preproc * 0.55);
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(fx, top - 14);
     ctx.lineTo(fx, bot + 14);
     ctx.stroke();
-    label(ctx, pal, fx + 6, bot + 8, 'FILTER', preproc * 0.8, pal.ph);
+    if (!hitsText(safe, fx + 6, bot + 8, 4))
+      label(ctx, pal, fx + 6, bot + 8, 'FILTER', preproc * 0.8, pal.ph);
   }
 
   /* 解码: classified intent readout with confidence */
@@ -1296,7 +1401,7 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     const slotD = Math.floor(t / 2.8);
     const cls = slotD % 2 ? 'R-HAND' : 'L-HAND';
     const confV = 84 + Math.floor(hash(slotD * 7.1) * 13);
-    chip(ctx, pal, chartW * 0.4, top - 34, `CLASS \u2190 ${cls} \u00b7 ${confV}%`, decode * 0.9, pal.e9);
+    chip(ctx, pal, x0 + chartW * 0.4, top - 34, `CLASS \u2190 ${cls} \u00b7 ${confV}%`, decode * 0.9, pal.e9);
   }
 
   /* traveling evoked spike — pronounced during 特征与解码 */
@@ -1311,7 +1416,8 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     const hot = r === 2;
     /* 采集: channels identify one by one */
     const idPulse = acquire * clamp01(1.6 - Math.abs(((t * 1.4) % (rows + 2)) - 1 - r));
-    label(ctx, pal, 8, yBase + 3, chNames[r], 0.45 + idPulse * 0.5, hot || idPulse > 0.4 ? pal.e9 : undefined);
+    if (!hitsText(safe, x0 + 8, yBase + 3, 6))
+      label(ctx, pal, x0 + 8, yBase + 3, chNames[r], 0.45 + idPulse * 0.5, hot || idPulse > 0.4 ? pal.e9 : undefined);
 
     ctx.strokeStyle = rgba(hot ? pal.e9 : pal.paper, hot ? 0.75 : 0.42 + idPulse * 0.2);
     ctx.lineWidth = hot ? 1.3 : 1;
@@ -1328,21 +1434,20 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
         Math.sin(x * 0.11 + t * 2.6) * amp * 0.1 * noiseLvl +
         jitter -
         spike;
-      if (x === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
+      if (x === 0) ctx.moveTo(x0 + x, y);
+      else ctx.lineTo(x0 + x, y);
     }
     ctx.stroke();
   }
 
   if (spikeX > 0 && spikeX < chartW) {
-    sq(ctx, spikeX, top - 18, 5, pal.e9, 0.9);
-    label(ctx, pal, spikeX + 8, top - 17, decode > 0.4 ? 'FEATURE' : 'EVOKED', 0.5 + decode * 0.4, pal.e9);
+    sq(ctx, x0 + spikeX, top - 18, 5, pal.e9, 0.9);
+    if (!hitsText(safe, x0 + spikeX + 8, top - 17, 6))
+      label(ctx, pal, x0 + spikeX + 8, top - 17, decode > 0.4 ? 'FEATURE' : 'EVOKED', 0.5 + decode * 0.4, pal.e9);
   }
 
   /* electrode montage — 输出 lights the leads one by one */
-  const mx = w * 0.84;
-  const my = h * 0.4;
-  const mr = Math.min(w, h) * 0.1;
+  if (showMontage) {
   ring(ctx, mx, my, mr, pal.paper, 0.35);
   ticks(ctx, pal, mx, my, mr, 5, 0.4, 4);
   ring(ctx, mx, my, mr * 0.55, pal.paper, 0.2);
@@ -1362,10 +1467,10 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     ink(ctx, pal, 0.1 + on * 0.1 + lit * 0.35 * output);
     ctx.beginPath();
     ctx.moveTo(x, y);
-    ctx.bezierCurveTo(x - mr, y, chartW + 30, ly, chartW, ly);
+    ctx.bezierCurveTo(x - mr, y, x0 + chartW + 30, ly, x0 + chartW, ly);
     ctx.stroke();
   }
-  label(ctx, pal, mx - 20, my + mr + 18, 'MONTAGE-8', 0.55);
+  label(ctx, pal, mx - 40, my + mr + 18, 'MONTAGE-8', 0.55);
 
   /* 采集: electrode impedance check before the chain trusts the signal */
   if (acquire > 0.15 && preproc < 0.6) {
@@ -1398,21 +1503,26 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
     });
   }
 
-  /* 输出: command ticks emitted from the montage */
+  /* 输出: command ticks emitted from the montage — stay left of the rail */
   if (output > 0.05) {
     const cmds = ['FWD', 'LEFT', 'RIGHT', 'STOP', 'GRASP'];
+    const xEnd = w - safe.r - 8;
     for (let i = 0; i < 5; i++) {
       const u = ((t * 0.5 + i / 5) % 1);
       const y = my - mr + (i + 0.5) * ((mr * 2) / 5);
-      const x = mx + mr + 10 + u * (w - mx - mr - 30);
+      const span = Math.max(0, xEnd - (mx + mr + 10));
+      const x = mx + mr + 10 + u * span;
+      if (x >= xEnd) continue;
       ctx.fillStyle = rgba(pal.ph, (1 - u) * 0.8 * output);
       ctx.fillRect(x, y - 4, 2, 8);
       if (u < 0.22) label(ctx, pal, x + 5, y - 8, cmds[i], (0.22 - u) * 4 * output * 0.9, pal.ph);
     }
-    label(ctx, pal, mx + mr + 14, my + mr + 34, 'CMD OUT', 0.7 * output, pal.ph);
+    label(ctx, pal, mx - 40, my + mr + 34, 'CMD OUT', 0.7 * output, pal.ph);
   }
 
   if (w > 1000) chip(ctx, pal, mx - 28, my - mr - 16, 'SOFTWARE ONLY', 0.55, pal.ph);
+  } /* showMontage */
+
   motes(ctx, pal, w, h, t, ptr, 24, pal.ph, false);
 
   ctx.restore();
@@ -1425,7 +1535,7 @@ function ambientProtocol(ctx: CanvasRenderingContext2D, w: number, h: number, t:
    hold, anti-cheat sweeps, the scoreboard runs. 复盘: taken
    cells stay filed in teal with writeups published.
    ============================================================ */
-function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr) {
+function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: number, acts: Acts, pal: Palette, ptr: Ptr, safe: Safe) {
   const hosting = A(acts, 0);
   const challenges = A(acts, 1);
   const env = A(acts, 2);
@@ -1462,6 +1572,11 @@ function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: n
       const p2 = iso(gx + 0.5, gz - 0.5);
       const p3 = iso(gx + 0.5, gz + 0.5);
       const p4 = iso(gx - 0.5, gz + 0.5);
+      const midX = (p1[0] + p2[0] + p3[0] + p4[0]) / 4;
+      const midY = (p1[1] + p2[1] + p3[1] + p4[1]) / 4;
+      /* keep contest tiles out of the right-rail label column */
+      if (midX > w - safe.r - 6) continue;
+
       ctx.beginPath();
       ctx.moveTo(p1[0], p1[1]);
       ctx.lineTo(p2[0], p2[1]);
@@ -1470,19 +1585,19 @@ function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: n
       ctx.closePath();
 
       if (island) {
-        ctx.fillStyle = rgba(pal.e9, challenges * (0.1 + wave * 0.14));
+        ctx.fillStyle = rgba(pal.e9, challenges * (0.14 + wave * 0.18));
         ctx.fill();
-        ctx.strokeStyle = rgba(pal.e9, challenges * 0.5);
+        ctx.strokeStyle = rgba(pal.e9, challenges * 0.62);
       } else if (hot) {
-        ctx.fillStyle = rgba(pal.e9, 0.06 + wave * 0.08);
+        ctx.fillStyle = rgba(pal.e9, 0.1 + wave * 0.12);
         ctx.fill();
-        ctx.strokeStyle = rgba(pal.e9, 0.3);
+        ctx.strokeStyle = rgba(pal.e9, 0.42);
       } else {
         if (wave > 0.88) {
-          ctx.fillStyle = rgba(pal.ph, 0.05);
+          ctx.fillStyle = rgba(pal.ph, 0.08);
           ctx.fill();
         }
-        ctx.strokeStyle = rgba(pal.paper, (0.1 + wave * 0.05) * built);
+        ctx.strokeStyle = rgba(pal.paper, (0.22 + wave * 0.1) * built);
       }
       ctx.lineWidth = 1;
       ctx.stroke();
@@ -1561,7 +1676,7 @@ function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: n
   /* live scoreboard + countdown */
   if (w > 1100) {
     const teams = ['GH0ST', 'NULLPTR', 'PWNIE', '0DAY'];
-    const bx0 = Math.min(w - 262, w * 0.8);
+    const bx0 = Math.min(w - safe.r - 170, w * 0.8);
     const by0 = h * 0.15;
     const remain = Math.max(0, 7 * 3600 + 41 * 60 + 22 - Math.floor(t * 37));
     const hh = String(Math.floor(remain / 3600)).padStart(2, '0');
@@ -1582,9 +1697,10 @@ function ambientGround(ctx: CanvasRenderingContext2D, w: number, h: number, t: n
     });
   }
 
-  label(ctx, pal, cx - 30, cy + N * s + 26, review > 0.4 ? 'ARENA / REVIEW' : 'ARENA / LIVE', 0.55, review > 0.4 ? pal.ph : undefined);
+  const arenaY = Math.min(cy + N * s + 26, h - safe.b - 8);
+  label(ctx, pal, cx - 30, arenaY, review > 0.4 ? 'ARENA / REVIEW' : 'ARENA / LIVE', 0.55, review > 0.4 ? pal.ph : undefined);
   if (review > 0.3)
-    label(ctx, pal, cx - 30, cy + N * s + 44, 'SOLVES 312 \u00b7 TEAMS 86 \u00b7 24 CHALLENGES OPEN-SOURCED', review * 0.65, pal.ph);
+    if (arenaY + 18 < h - safe.b + 12) label(ctx, pal, cx - 30, arenaY + 18, 'SOLVES 312 \u00b7 TEAMS 86 \u00b7 24 CHALLENGES OPEN-SOURCED', review * 0.65, pal.ph);
 
   /* contest sparks near solved / glowing cells */
   for (let i = 0; i < 16; i++) {
@@ -1652,11 +1768,17 @@ export function initShowcase() {
   let raf = 0;
   let dead = false;
 
-  // pointer parallax
+  // pointer parallax — smoothed in canvas space so the scene doesn't jitter
   let mx = 0;
   let my = 0;
   let smx = 0;
   let smy = 0;
+  let ptrClientX = -1;
+  let ptrClientY = -1;
+  let hasPtr = false;
+  let spx = 0;
+  let spy = 0;
+  let ptrReady = false;
 
   const resize = () => {
     const dpr = Math.min(2, window.devicePixelRatio || 1);
@@ -1810,10 +1932,16 @@ export function initShowcase() {
 
   const onPointer = (ev: PointerEvent) => {
     if (ev.pointerType === 'touch') return;
-    mx = (ev.clientX / window.innerWidth) * 2 - 1;
-    my = (ev.clientY / window.innerHeight) * 2 - 1;
+    const rec = bg.getBoundingClientRect();
+    if (rec.width < 1 || rec.height < 1) return;
+    ptrClientX = ev.clientX;
+    ptrClientY = ev.clientY;
+    hasPtr = true;
+    mx = ((ev.clientX - rec.left) / rec.width) * 2 - 1;
+    my = ((ev.clientY - rec.top) / rec.height) * 2 - 1;
   };
   const onPointerLeave = () => {
+    hasPtr = false;
     mx = 0;
     my = 0;
   };
@@ -1864,8 +1992,8 @@ export function initShowcase() {
     pos += (target - pos) * k;
     if (Math.abs(target - pos) < 0.0012) pos = target;
 
-    smx += (mx - smx) * (1 - Math.exp(-dt * 4));
-    smy += (my - smy) * (1 - Math.exp(-dt * 4));
+    smx += (mx - smx) * (1 - Math.exp(-dt * 5.2));
+    smy += (my - smy) * (1 - Math.exp(-dt * 5.2));
 
     const rounded = Math.round(pos);
     if (rounded !== current) activate(rounded, current !== -1);
@@ -1902,38 +2030,50 @@ export function initShowcase() {
       const rec = bg.getBoundingClientRect();
       const w = rec.width;
       const h = rec.height;
+      if (!ptrReady) {
+        spx = w * 0.5;
+        spy = h * 0.5;
+        ptrReady = true;
+      }
+      const targetPx = hasPtr ? ptrClientX - rec.left : w * 0.5;
+      const targetPy = hasPtr ? ptrClientY - rec.top : h * 0.5;
+      const pk = 1 - Math.exp(-dt * 5.2);
+      spx += (targetPx - spx) * pk;
+      spy += (targetPy - spy) * pk;
       const ox = smx * 18;
       const oy = smy * 12;
       const ptr: Ptr = {
         x: smx,
         y: smy,
-        px: (smx * 0.5 + 0.5) * w - ox,
-        py: (smy * 0.5 + 0.5) * h - oy,
+        px: spx - ox,
+        py: spy - oy,
       };
+      const safe = measureSafe(root, bg, w, h);
       ctx.clearRect(0, 0, w, h);
       ctx.save();
       ctx.translate(ox, oy);
       switch (mode) {
         case 'loop':
-          ambientLoop(ctx, w, h, time, acts, pal, ptr);
+          ambientLoop(ctx, w, h, time, acts, pal, ptr, safe);
           break;
         case 'timeline':
-          ambientTimeline(ctx, w, h, time, acts, pal, ptr);
+          ambientTimeline(ctx, w, h, time, acts, pal, ptr, safe);
           break;
         case 'corridor':
-          ambientCorridor(ctx, w, h, time, acts, pal, ptr);
+          ambientCorridor(ctx, w, h, time, acts, pal, ptr, safe);
           break;
         case 'signals':
-          ambientSignals(ctx, w, h, time, acts, pal, ptr);
+          ambientSignals(ctx, w, h, time, acts, pal, ptr, safe);
           break;
         case 'protocol':
-          ambientProtocol(ctx, w, h, time, acts, pal, ptr);
+          ambientProtocol(ctx, w, h, time, acts, pal, ptr, safe);
           break;
         case 'ground':
-          ambientGround(ctx, w, h, time, acts, pal, ptr);
+          ambientGround(ctx, w, h, time, acts, pal, ptr, safe);
           break;
       }
       ctx.restore();
+      typographyVeil(ctx, w, h, pal, safe);
     }
 
     layout();

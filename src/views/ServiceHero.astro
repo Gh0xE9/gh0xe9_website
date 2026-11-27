@@ -132,7 +132,12 @@ const nextService = copy.services.items.find((item) => item.no === nextNo);
     <nav class="dk-rail" data-rail aria-label={service.title}>
       {
         deck.scenes.map((scene, i) => (
-          <button type="button" data-goto={i} aria-current={i === 0 ? 'true' : undefined}>
+          <button
+            type="button"
+            data-goto={i}
+            aria-label={`${String(i + 1).padStart(2, '0')} ${scene.name}`}
+            aria-current={i === 0 ? 'true' : undefined}
+          >
             <span class="dk-rail__name">
               {String(i + 1).padStart(2, '0')} {scene.name}
             </span>
